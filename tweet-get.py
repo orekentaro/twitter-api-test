@@ -1,18 +1,13 @@
 import tweepy
+import key_dic
 
 """"
 Twitterのキー
 """
-
-# consumer_key = ""
-# consumer_secret = ""
-# access_token = ""
-# access_token_secret = ""
-
-consumer_key = "KaVvmuG05f4E3cuKcPlWtZCax"
-consumer_secret = "1d6e3vSFv8gfb9Qf5vwQ02rAvEjO4iUZVcOiI5oZpIQFSW3AbO"
-access_token = "1411142147328286720-4uu9o10X11v6UyaE8od2vuroj7FCBo"
-access_token_secret = "aU7oB9o28797fLpWamoSb43Zrt3flwQWBFHTxKYFe63Fe"
+consumer_key = key_dic.api_key_dic["consumer_key"]
+consumer_secret = key_dic.api_key_dic["consumer_secret"]
+access_token = key_dic.api_key_dic["access_token"]
+access_token_secret = key_dic.api_key_dic["access_token_secret"]
 
 """
 Twitterオブジェクトの生成
@@ -23,10 +18,10 @@ api = tweepy.API(auth)
 
 
 class Listener(tweepy.StreamListener):
-  """ Handles tweets received from the stream. """
+  """ 指定のハッシュタグの最新のツイートを随時取得していく """
 
   def on_status(self, status):
-    """ Prints tweet and hashtags """
+    """ 情報を出力 """
     print('------------------------------')
     print(f"ユーザーID：{status.user.screen_name}")
     print(f"プロフィール：{status.user.description}")
@@ -46,6 +41,8 @@ class Listener(tweepy.StreamListener):
     return True
 
 
+# 取得したいハッシュタグをこの変数に入れる。
+sarch_hashtag = '#駆け出しエンジニアと繋がりたい'
 listener = Listener()
 stream = tweepy.Stream(auth, listener)
-stream.filter(track=['#駆け出しエンジニアと繋がりたい'])
+stream.filter(track=[sarch_hashtag])
