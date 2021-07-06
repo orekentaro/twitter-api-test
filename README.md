@@ -11,4 +11,6 @@
 最新のものを随時取得します。
 
 ### 参考
-https://hironow.bitbucket.io/blog/html/2014/01/18/tweepy_hashtag_search.html
+・https://hironow.bitbucket.io/blog/html/2014/01/18/tweepy_hashtag_search.html
+
+・https://tech-lab.sios.jp/archives/21400
