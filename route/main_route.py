@@ -6,6 +6,6 @@ MainModel = MainModel()
 
 
 @main_route.route('/')
-def top_page():
+def main_page():
   """ログイン画面を表示するルート"""
-  return MainModel.top_page()
+  return MainModel.main_page()

@@ -1,6 +1,6 @@
-from flask import Blueprint
+from flask import render_template
 from models.base_model import BaseModel
 
 class MainModel(BaseModel):
-  def top_page(self):
-    return 'Hello'
+  def main_page(self):
+    return render_template('main.html')
