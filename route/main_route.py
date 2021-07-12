@@ -6,6 +6,21 @@ MainModel = MainModel()
 
 
 @main_route.route('/')
-def main_page():
-  """ログイン画面を表示するルート"""
-  return MainModel.main_page()
+def top_page():
+  """トップページを表示するルート"""
+  return MainModel.top_page()
+
+@main_route.route('/user_search')
+def user_search():
+  """ユーザー検索画面を表示するルート"""
+  return MainModel.user_search()
+
+@main_route.route('/tweet_search')
+def tweet_search():
+  """ツイート検索画面を表示するルート"""
+  return MainModel.tweet_search()
+
+@main_route.route('/tweet_out')
+def tweet_out():
+  """ツイート出力画面を表示するルート"""
+  return MainModel.tweet_out()
