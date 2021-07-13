@@ -10,9 +10,9 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-light navbar-expand-md" style="background-color: #e3f2fd;">
+  <nav class="navbar navbar-dark navbar-expand-md" style=" background-color: rgba(29,161,242,1.00);">
     <div class="container-fluid">
-      <i class="fab fa-twitter"></i>
+      <i class="fab fa-twitter" style="color: white; padding: 10px;"></i>
       <a class="navbar-brand" href="#">Offgrid Twitter API</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -20,16 +20,16 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ url_for('main_route.top_page') }}">Home</a>
+            <a class="nav-link{% if home %} active {% endif %}" aria-current="page" href="{{ url_for('main_route.top_page') }}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('main_route.tweet_search') }}">ツイート検索</a>
+            <a class="nav-link{% if tweet_search %} active {% endif %}" href="{{ url_for('main_route.tweet_search') }}">ツイート検索</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('main_route.user_search') }}">ユーザー検索</a>
+            <a class="nav-link{% if user_search %} active {% endif %}" href="{{ url_for('main_route.user_search') }}">ユーザー検索</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('main_route.tweet_out') }}">ツイート出力</a>
+            <a class="nav-link{% if tweet_out %} active {% endif %}" href="{{ url_for('main_route.tweet_out') }}">ツイート出力</a>
           </li>
         </ul>
       </div>
