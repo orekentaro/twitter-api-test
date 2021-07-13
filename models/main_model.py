@@ -21,39 +21,37 @@ class MainModel(BaseModel):
     count = request.form['count']
 
     with self.start_transaction(False) as tx:
-      """まず検索条件をインサート
-      """
-      sql = "SELECT nextval('search_no_seq') as search_no_seq"
-      search_no_seq = tx.find_one(sql)['search_no_seq']
-      sql = """
-        INSERT INTO
-          search_info(
-            search_no,
-            search_condition,
-            get_at,
-            status
-          )
-          VALUES(
-            %s,%s,%s,%s
-          )
-        """
-      insert_sarch_index = [
-        search_no_seq,
-        target,
-        datetime.datetime.now(),
-        '0'
-      ]
-      tx.save(sql, insert_sarch_index)
+      # """まず検索条件をインサート
+      # """
+      # sql = "SELECT nextval('search_no_seq') as search_no_seq"
+      # search_no_seq = tx.find_one(sql)['search_no_seq']
+      # sql = """
+      #   INSERT INTO
+      #     search_info(
+      #       search_no,
+      #       search_condition,
+      #       get_at,
+      #       status
+      #     )
+      #     VALUES(
+      #       %s,%s,%s,%s
+      #     )
+      #   """
+      # insert_sarch_index = [
+      #   search_no_seq,
+      #   target,
+      #   datetime.datetime.now(),
+      #   '0'
+      # ]
+      # tx.save(sql, insert_sarch_index)
 
       #取得ツイートを変数に
       tweets = tweet_gets(target, count)
 
-      n = 1
       for tweet in tweets:
-        print(n)
-        n+1
         '''for文でそれぞれのデータをインサート
         '''
+        print(f'見たいやつ：{tweet.user.screen_name}')
         user = tweet.user  # ユーザー情報
 
         """ユーザー情報をテーブルに

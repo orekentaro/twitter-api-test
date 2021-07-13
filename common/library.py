@@ -20,7 +20,6 @@ api = tweepy.API(auth)
 
 def tweet_gets(target , count):
   tweets = api.search(q=[target], count=count)
-
   # for tweet in tweets:
   #   print('------------------------------')
   #   print(f"ユーザーID：{tweet.user.screen_name}")
