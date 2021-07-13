@@ -24,3 +24,8 @@ def tweet_search():
 def tweet_out():
   """ツイート出力画面を表示するルート"""
   return MainModel.tweet_out()
+
+@main_route.route('/get_tweet', methods=['POST'])
+def get_tweet():
+  """ツイート出力画面を表示するルート"""
+  return MainModel.get_tweet()

@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request
 from models.base_model import BaseModel
 
 class MainModel(BaseModel):
@@ -13,3 +13,7 @@ class MainModel(BaseModel):
 
   def tweet_out(self):
     return render_template('main/tweet_out.html', tweet_out=True)
+
+  def get_tweet(self):
+    print(request.form)
+    return 'hello'

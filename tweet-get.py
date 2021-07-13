@@ -42,7 +42,7 @@ class Listener(tweepy.StreamListener):
 
 
 # 取得したいハッシュタグをこの変数に入れる。
-sarch_hashtag = '#駆け出しエンジニアと繋がりたい'
+sarch_hashtag = '駆け出しエンジニアと繋がりたい'
 listener = Listener()
 stream = tweepy.Stream(auth, listener)
 stream.filter(track=[sarch_hashtag])

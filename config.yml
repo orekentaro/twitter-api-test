@@ -30,6 +30,6 @@ log:
     handlers: [fileRotatingHandler,consoleHandler]
 database:
   host: "localhost"
-  dbname: "creete"
-  user: "postgres"
-  password: "postgres"
+  dbname: "twitter_api"
+  user: "nagatolentarou"
+  password: "nagato8"
