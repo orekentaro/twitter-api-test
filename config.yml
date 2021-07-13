@@ -31,5 +31,5 @@ log:
 database:
   host: "localhost"
   dbname: "twitter_api"
-  user: "nagatolentarou"
+  user: "nagatokentarou"
   password: "nagato8"

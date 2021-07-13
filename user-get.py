@@ -29,5 +29,5 @@ for tweet in tweets:
   # print('ツイート数 : ', num)  # ツイート数
   # print('=' * 80)  # =を80個表示
   # num += 1  # ツイート数を計算
-  print(tweet.created_at)
+  print(type(tweet.created_at.strftime("%Y/%m/%d %H:%M:%S")))
 

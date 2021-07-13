@@ -27,8 +27,8 @@ class MainModel(BaseModel):
       search_no_seq = tx.find_one(sql)['search_no_seq']
       sql = """
         INSERT INTO
-          sarch_info(
-            search_no_seq,
+          search_info(
+            search_no,
             search_condition,
             get_at,
             status
@@ -72,7 +72,7 @@ class MainModel(BaseModel):
               created_at
             )
             VALUES(
-              %s,%s,%s,%s,%s,%s,%s,%s,%s
+              %s,%s,%s,%s,%s,%s,%s,%s,%s,%s
             )
           """
         insert_get_user_index = [
@@ -87,7 +87,7 @@ class MainModel(BaseModel):
           'test_user',
           datetime.datetime.now()
         ]
-      tx.save(sql, insert_get_user_index)
+        tx.save(sql, insert_get_user_index)
 
 
       sql = "SELECT nextval('tweet_id_seq') as tweet_id_seq"
@@ -96,7 +96,7 @@ class MainModel(BaseModel):
           INSERT INTO
             tweet(
               tweet_id,
-              serch_no,
+              search_no,
               user_id,
               post_content,
               favo_count,
@@ -106,10 +106,10 @@ class MainModel(BaseModel):
               status
             )
             VALUES(
-              %s,%s,%s,%s,%s,%s,%s,%s,%s
+              %s,%s,%s,%s,%s,%s,%s,%s,%s,%s
             )
           """
-      insert_get_user_index = [
+      insert_get_tweet_index = [
         tweet_id_seq,
         search_no_seq,
         user.screen_name,
@@ -118,10 +118,10 @@ class MainModel(BaseModel):
         tweet.favorite_count,
         tweet.retweet_count,
         0,  #リプライ数は要検討
-        tweet.created_at,
+        tweet.created_at.strftime("%Y/%m/%d %H:%M:%S"),
         0
       ]
-      tx.save(sql, insert_get_user_index)
+      tx.save(sql, insert_get_tweet_index)
 
       for hashtag in tweet.entities['hashtags']:
         '''ハッシュタグをインサート
@@ -155,6 +155,8 @@ class MainModel(BaseModel):
         tx.save(sql, [new_hashtag_count, tag_id])
 
       else:
+        '''ハッシュタグがなければ追加
+        '''
         sql = "SELECT nextval('tag_id_seq') as tag_id_seq"
         tag_id_seq = tx.find_one(sql)['tag_id_seq']
 
