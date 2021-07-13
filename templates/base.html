@@ -35,10 +35,15 @@
       </div>
     </div>
   </nav>
+  <div class="card m-5 p-1">
+    <div class="card-body">
   {% block content %}
   {% endblock %}
+    </div>
+  </div>
   <script src="{{url_for('static', filename='js/bootstrap.min.js') }}"></script>
   <script src="{{url_for('static', filename='js/popper.min.js') }}"></script>
+  <script src="{{url_for('static', filename='js/jquery.js') }}"></script>
   {% block script %}
   {% endblock %}
 </body>
