@@ -48,7 +48,10 @@ class MainModel(BaseModel):
       #取得ツイートを変数に
       tweets = tweet_gets(target, count)
 
+      n = 1
       for tweet in tweets:
+        print(n)
+        n+1
         '''for文でそれぞれのデータをインサート
         '''
         user = tweet.user  # ユーザー情報
@@ -90,88 +93,88 @@ class MainModel(BaseModel):
         tx.save(sql, insert_get_user_index)
 
 
-      sql = "SELECT nextval('tweet_id_seq') as tweet_id_seq"
-      tweet_id_seq = tx.find_one(sql)['tweet_id_seq']
-      sql = """
-          INSERT INTO
-            tweet(
-              tweet_id,
-              search_no,
-              user_id,
-              post_content,
-              favo_count,
-              rt_count,
-              reprly_count,
-              post_time,
-              status
-            )
-            VALUES(
-              %s,%s,%s,%s,%s,%s,%s,%s,%s,%s
-            )
-          """
-      insert_get_tweet_index = [
-        tweet_id_seq,
-        search_no_seq,
-        user.screen_name,
-        user.friends_count,
-        tweet.text,
-        tweet.favorite_count,
-        tweet.retweet_count,
-        0,  #リプライ数は要検討
-        tweet.created_at.strftime("%Y/%m/%d %H:%M:%S"),
-        0
-      ]
-      tx.save(sql, insert_get_tweet_index)
+      # sql = "SELECT nextval('tweet_id_seq') as tweet_id_seq"
+      # tweet_id_seq = tx.find_one(sql)['tweet_id_seq']
+      # sql = """
+      #     INSERT INTO
+      #       tweet(
+      #         tweet_id,
+      #         search_no,
+      #         user_id,
+      #         post_content,
+      #         favo_count,
+      #         rt_count,
+      #         reprly_count,
+      #         post_time,
+      #         status
+      #       )
+      #       VALUES(
+      #         %s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+      #       )
+      #     """
+      # insert_get_tweet_index = [
+      #   tweet_id_seq,
+      #   search_no_seq,
+      #   user.screen_name,
+      #   user.friends_count,
+      #   tweet.text,
+      #   tweet.favorite_count,
+      #   tweet.retweet_count,
+      #   0,  #リプライ数は要検討
+      #   tweet.created_at.strftime("%Y/%m/%d %H:%M:%S"),
+      #   0
+      # ]
+      # tx.save(sql, insert_get_tweet_index)
 
-      for hashtag in tweet.entities['hashtags']:
-        '''ハッシュタグをインサート
-        '''
-        sql = """
-          SELECT
-            tag_id,
-            detail,
-            count
-          FROM
-            hashu_tag
-          WHERE
-            detail = %s
+      # for hashtag in tweet.entities['hashtags']:
+      #   '''ハッシュタグをインサート
+      #   '''
+      #   sql = """
+      #     SELECT
+      #       tag_id,
+      #       detail,
+      #       count
+      #     FROM
+      #       hashu_tag
+      #     WHERE
+      #       detail = %s
             
-          """
-      hashtag_result = tx.find_one(sql, [hashtag])
+      #     """
+      # hashtag_result = tx.find_one(sql, [hashtag])
 
-      if hashtag_result :
-        '''すでに取得したハッシュタグがある場合はカウントを増やす
-        '''
-        tag_id = hashtag_result['tag_id']
-        new_hashtag_count = hashtag_result['count'] = 1
-        sql = """
-            UPDATE
-              hashu_tag
-            SET
-              count=%s
-            WHERE
-              info_id=%s
-            """
-        tx.save(sql, [new_hashtag_count, tag_id])
+      # if hashtag_result :
+      #   '''すでに取得したハッシュタグがある場合はカウントを増やす
+      #   '''
+      #   tag_id = hashtag_result['tag_id']
+      #   new_hashtag_count = hashtag_result['count'] = 1
+      #   sql = """
+      #       UPDATE
+      #         hashu_tag
+      #       SET
+      #         count=%s
+      #       WHERE
+      #         info_id=%s
+      #       """
+      #   tx.save(sql, [new_hashtag_count, tag_id])
 
-      else:
-        '''ハッシュタグがなければ追加
-        '''
-        sql = "SELECT nextval('tag_id_seq') as tag_id_seq"
-        tag_id_seq = tx.find_one(sql)['tag_id_seq']
+      # else:
+      #   '''ハッシュタグがなければ追加
+      #   '''
+      #   sql = "SELECT nextval('tag_id_seq') as tag_id_seq"
+      #   tag_id_seq = tx.find_one(sql)['tag_id_seq']
 
-        sql = """
-            INSERT INTO
-              hash_tag(
-                tag_id,
-                detail,
-                count
-              )
-            VALUES(
-              %s,%s,%s
-            )
-            """
-        tag_list = [tag_id_seq, tag_id_seq, 1]
-        tx.save(sql, tag_list)
+      #   sql = """
+      #       INSERT INTO
+      #         hash_tag(
+      #           tag_id,
+      #           detail,
+      #           count
+      #         )
+      #       VALUES(
+      #         %s,%s,%s
+      #       )
+      #       """
+      #   tag_list = [tag_id_seq, tag_id_seq, 1]
+      #   tx.save(sql, tag_list)
 
     return 'OK'
