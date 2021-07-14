@@ -30,6 +30,8 @@ class MainModel(BaseModel):
           si.search_no = tw.search_no
         WHERE
           si.status='0'
+        ORDER BY
+          get_at DESC
         """
       search_infos = tx.find_all(sql)
 

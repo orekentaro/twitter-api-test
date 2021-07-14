@@ -8,7 +8,6 @@
 <table id="example" class="table table-hover table-light" style="width:100%">
   <thead>
       <tr>
-        <th></th>
         <th>ユーザー名</th>
         <th>ユーザーID</th>
         <th>投稿内容</th>
@@ -20,11 +19,6 @@
   <tbody>
     {% for info in get_tweets %}
     <tr>
-      <td>
-        <a href="{{url_for('main_route.tweet_detail', id=info['tweet_id'])}}">
-          <button class="btn btn btn-primary btn-sm" type="button" id="inputGroupFileAddon03">詳細</button>
-        </a>
-      </td>
       <td>
         {{info['user_name']}}
       </td>
@@ -48,7 +42,6 @@
   </tbody>
   <tfoot>
     <tr>
-      <th></th>
       <th>ユーザー名</th>
       <th>ユーザーID</th>
       <th>投稿内容</th>
