@@ -1,6 +1,6 @@
 from flask import render_template, request
 from models.base_model import BaseModel
-from common.library import tweet_gets
+from common.library import tweet_gets, search_condition, save_user, save_tweet, save_hashtag
 import datetime
 
 class MainModel(BaseModel):
@@ -23,29 +23,15 @@ class MainModel(BaseModel):
     with self.start_transaction(False) as tx:
       """まず検索条件をインサート
       """
+      #検索条件のシーケンス
       sql = "SELECT nextval('search_no_seq') as search_no_seq"
       search_no_seq = tx.find_one(sql)['search_no_seq']
-      sql = """
-        INSERT INTO
-          search_info(
-            search_no,
-            search_condition,
-            get_at,
-            status
-          )
-          VALUES(
-            %s,%s,%s,%s
-          )
-        """
-      insert_sarch_index = [
-        search_no_seq,
-        target,
-        datetime.datetime.now(),
-        '0'
-      ]
-      tx.save(sql, insert_sarch_index)
 
-      #取得ツイートを変数に
+      #検索条件保存
+      search_condition(search_no_seq, target)
+
+      """取得ツイートを変数に
+      """
       tweets = tweet_gets(target, count)
 
       for tweet in tweets:
@@ -55,94 +41,35 @@ class MainModel(BaseModel):
 
         """ユーザー情報をテーブルに
         """
+        #ユーザーシーケンス
         sql = "SELECT nextval('get_user_no_seq') as get_user_no_seq"
         get_user_no_seq = tx.find_one(sql)['get_user_no_seq']
-        sql = """
-          INSERT INTO
-            twitter_user(
-              user_no,
-              user_id,
-              user_name,
-              follow,
-              follower,
-              profile,
-              tweet_count,
-              status,
-              created_id,
-              created_at
-            )
-            VALUES(
-              %s,%s,%s,%s,%s,%s,%s,%s,%s,%s
-            )
-          """
-        insert_get_user_index = [
-          get_user_no_seq,
-          user.screen_name,
-          user.name,
-          user.friends_count,
-          user.followers_count,
-          user.description,
-          user.statuses_count,
-          "0",
-          'test_user',
-          datetime.datetime.now()
-        ]
-        tx.save(sql, insert_get_user_index)
+
+        #ユーザー情報保存
+        save_user(get_user_no_seq, user)
 
 
-      sql = "SELECT nextval('tweet_id_seq') as tweet_id_seq"
-      tweet_id_seq = tx.find_one(sql)['tweet_id_seq']
-      sql = """
-          INSERT INTO
-            tweet(
-              tweet_id,
-              search_no,
-              user_id,
-              post_content,
-              favo_count,
-              rt_count,
-              reprly_count,
-              post_time,
-              status
-            )
-            VALUES(
-              %s,%s,%s,%s,%s,%s,%s,%s,%s
-            )
-          """
-      insert_get_tweet_index = [
-        tweet_id_seq,
-        search_no_seq,
-        user.screen_name,
-        tweet.text,
-        tweet.favorite_count,
-        tweet.retweet_count,
-        0,
-        tweet.created_at.strftime("%Y/%m/%d %H:%M:%S"),
-        "0"
-      ]
-      tx.save(sql, insert_get_tweet_index)
+        """ツイート情報をテーブルに
+        """
+        #ツイート番号Seq
+        sql = "SELECT nextval('tweet_id_seq') as tweet_id_seq"
+        tweet_id_seq = tx.find_one(sql)['tweet_id_seq']
 
-      for hashtag in tweet.entities['hashtags']:
-        print(f'みたい；{hashtag}')
-        if hashtag:
-          hashtag = hashtag['text']
-          '''ハッシュタグがなければ追加
-          '''
-          sql = "SELECT nextval('tag_id_seq') as tag_id_seq"
-          tag_id_seq = tx.find_one(sql)['tag_id_seq']
+        #ツイート内容保存
+        save_tweet(tweet_id_seq, search_no_seq, user, tweet)
 
-          sql = """
-              INSERT INTO
-                hash_tag(
-                  tag_id,
-                  detail,
-                  tweet_id
-                )
-              VALUES(
-                %s,%s,%s
-              )
-              """
-          tag_list = [tag_id_seq, hashtag, tweet_id_seq]
-          tx.save(sql, tag_list)
 
+        for hashtag in tweet.entities['hashtags']:
+          if hashtag:
+            '''投稿ツイートにハッシュタグがあれば
+            '''
+            # ハッシュタグ取り出す
+            hashtag = hashtag['text']
+
+            #ハッシュタグSeq
+            sql = "SELECT nextval('tag_id_seq') as tag_id_seq"
+            tag_id_seq = tx.find_one(sql)['tag_id_seq']
+
+            #ハッシュタグ保存
+            save_hashtag(tag_id_seq, hashtag, tweet_id_seq)
     return 'OK'

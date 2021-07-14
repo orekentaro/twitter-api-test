@@ -1,6 +1,7 @@
 import tweepy
 import key_dic
-
+from models.main_model import BaseModel
+import datetime
 """"
 Twitterのキー
 """
@@ -18,6 +19,10 @@ api = tweepy.API(auth)
 
 api = tweepy.API(auth)
 
+#DB用のインスタンス生成
+BaseModel = BaseModel()
+
+
 def tweet_gets(target , count):
   """ツイート文字検索
     Args:
@@ -33,3 +38,146 @@ def tweet_gets(target , count):
   tweets = api.search(q=[target], count=count)
   return tweets
 
+
+def search_condition(search_no_seq, target):
+  """ツイート文字検索
+    Args:
+      search_no_seq(int): 検索条件のシーケンス
+      target(string):フォームから取得した検索条件
+    Returns:
+      なし
+    Examples:
+      フリーワード、ハッシュダグ、ユーザー検索で使用する
+  """
+  with BaseModel.start_transaction(False) as tx:
+    sql = """
+      INSERT INTO
+        search_info(
+          search_no,
+          search_condition,
+          get_at,
+          status
+        )
+        VALUES(
+          %s,%s,%s,%s
+        )
+      """
+    insert_sarch_index = [
+      search_no_seq,
+      target,
+      datetime.datetime.now(),
+      '0'
+    ]
+    tx.save(sql, insert_sarch_index)
+
+def save_user(get_user_no_seq, user):
+  """ツイート文字検索
+    Args:
+      get_user_no_seq(int): ユーザーのシーケンス
+      user(json):ツイート情報からユーザーの情報だけを取得したjson
+    Returns:
+      なし
+    Examples:
+      フリーワード、ハッシュダグ、ユーザー検索で使用する
+  """
+  with BaseModel.start_transaction(False) as tx:
+    sql = """
+      INSERT INTO
+        twitter_user(
+          user_no,
+          user_id,
+          user_name,
+          follow,
+          follower,
+          profile,
+          tweet_count,
+          status,
+          created_id,
+          created_at
+        )
+        VALUES(
+          %s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+        )
+      """
+    insert_get_user_index = [
+      get_user_no_seq,
+      user.screen_name,
+      user.name,
+      user.friends_count,
+      user.followers_count,
+      user.description,
+      user.statuses_count,
+      "0",
+      'test_user',
+      datetime.datetime.now()
+    ]
+    tx.save(sql, insert_get_user_index)
+
+def save_tweet(tweet_id_seq, search_no_seq, user, tweet):
+  """ツイート文字検索
+    Args:
+      tweet_id_seq(int): ツイートのシーケンス
+      search_no_seq(int): 検索条件のシーケンス
+      user(json):ツイート情報からユーザーの情報だけを取得したjson
+      tweet(json):ツイート情報のjson
+    Returns:
+      なし
+    Examples:
+      フリーワード、ハッシュダグ、ユーザー検索で使用する
+  """
+  with BaseModel.start_transaction(False) as tx:
+    sql = """
+      INSERT INTO
+        tweet(
+          tweet_id,
+          search_no,
+          user_id,
+          post_content,
+          favo_count,
+          rt_count,
+          reprly_count,
+          post_time,
+          status
+        )
+        VALUES(
+          %s,%s,%s,%s,%s,%s,%s,%s,%s
+        )
+      """
+    insert_get_tweet_index = [
+      tweet_id_seq,
+      search_no_seq,
+      user.screen_name,
+      tweet.text,
+      tweet.favorite_count,
+      tweet.retweet_count,
+      0,
+      tweet.created_at.strftime("%Y/%m/%d %H:%M:%S"),
+      "0"
+    ]
+    tx.save(sql, insert_get_tweet_index)
+
+def save_hashtag(tag_id_seq, hashtag, tweet_id_seq):
+  """ツイート文字検索
+    Args:
+      tag_id_seq(int): ハッシュタグのシーケンス
+      tweet_id_seq(int): ツイート番号のシーケンス
+      hashtag(string):ツイート情報かハッシュタグを取得した文字列
+    Returns:
+      なし
+    Examples:
+      フリーワード、ハッシュダグ、ユーザー検索で使用する
+  """
+  with BaseModel.start_transaction(False) as tx:
+    sql = """
+      INSERT INTO
+        hash_tag(
+          tag_id,
+          detail,
+          tweet_id
+        )
+      VALUES(
+        %s,%s,%s
+      )
+      """
+    tag_list = [tag_id_seq, hashtag, tweet_id_seq]
+    tx.save(sql, tag_list)
