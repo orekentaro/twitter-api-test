@@ -17,7 +17,7 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-Account = "@orenagato"  # 取得したいユーザーのユーザーIDを代入
+Account = "@Eternal_door"  # 取得したいユーザーのユーザーIDを代入
 tweets = api.user_timeline(Account, count=1, page=1)
 num = 1  # ツイート数を計算するための変数
 for tweet in tweets:
@@ -29,5 +29,5 @@ for tweet in tweets:
   # print('ツイート数 : ', num)  # ツイート数
   # print('=' * 80)  # =を80個表示
   # num += 1  # ツイート数を計算
-  print(type(tweet.created_at.strftime("%Y/%m/%d %H:%M:%S")))
+  print(tweet.created_at)
 

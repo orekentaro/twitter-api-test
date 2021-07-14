@@ -112,17 +112,23 @@ class MainModel(BaseModel):
     with self.start_transaction() as tx:
       sql = """
         SELECT
-          user_id,
+          tweet_id,
+          user_name,
+          tw.user_id,
           post_content,
           favo_count,
           rt_count,
           post_time
         FROM
-          tweet
+          tweet tw
+        LEFT JOIN
+          twitter_user tu
+          ON 
+            tw.user_id=tu.user_id
         WHERE
           search_no=%s
         """
       get_tweets = tx.find_all(sql,[id])
 
 
-    return render_template('main/get_tweet_details.html',get_tweets=get_tweets, user_search=True)
+    return render_template('main/get_tweet_details.html',get_tweets=get_tweets, tweet_search=True)
