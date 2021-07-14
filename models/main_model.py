@@ -126,54 +126,23 @@ class MainModel(BaseModel):
         print(f'みたい；{hashtag}')
         if hashtag:
           hashtag = hashtag['text']
-          '''ハッシュタグをインサート
+          '''ハッシュタグがなければ追加
           '''
+          sql = "SELECT nextval('tag_id_seq') as tag_id_seq"
+          tag_id_seq = tx.find_one(sql)['tag_id_seq']
+
           sql = """
-            SELECT
-              tag_id,
-              detail,
-              count
-            FROM
-              hash_tag
-            WHERE
-              detail = %s
-              
-            """
-          hashtag_result = tx.find_one(sql, [hashtag])
-
-          if hashtag_result :
-            '''すでに取得したハッシュタグがある場合はカウントを増やす
-            '''
-            tag_id = hashtag_result['tag_id']
-            new_hashtag_count = hashtag_result['count'] = 1
-            sql = """
-                UPDATE
-                  hash_tag
-                SET
-                  count=%s
-                WHERE
-                  info_id=%s
-                """
-            tx.save(sql, [new_hashtag_count, tag_id])
-
-          else:
-            '''ハッシュタグがなければ追加
-            '''
-            sql = "SELECT nextval('tag_id_seq') as tag_id_seq"
-            tag_id_seq = tx.find_one(sql)['tag_id_seq']
-
-            sql = """
-                INSERT INTO
-                  hash_tag(
-                    tag_id,
-                    detail,
-                    count
-                  )
-                VALUES(
-                  %s,%s,%s
+              INSERT INTO
+                hash_tag(
+                  tag_id,
+                  detail,
+                  tweet_id
                 )
-                """
-            tag_list = [tag_id_seq, hashtag, 1]
-            tx.save(sql, tag_list)
+              VALUES(
+                %s,%s,%s
+              )
+              """
+          tag_list = [tag_id_seq, hashtag, tweet_id_seq]
+          tx.save(sql, tag_list)
 
     return 'OK'
