@@ -1,6 +1,8 @@
 {% block css %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/datatables.min.css') }}">
 <link rel="stylesheet" href="{{url_for('static', filename='css/buttons.bootstrap5.min.css') }}">
+<style>
+</style>
 {% endblock %}
 {%- extends "base.html" %}
 {%- block content %}
@@ -16,7 +18,7 @@
           <input class="form-control" type="number" name="count" placeholder="取得件数" aria-label="default input example">
         </div>
         <div class="col-md-2 ">
-          <button class="btn btn btn-primary" type="submit" id="inputGroupFileAddon03">検索</button>
+          <button class="btn btn btn-primary" type="submit" id="search_button" data-bs-toggle="modal" data-bs-target="#loading_modal">検索</button>
         </div>
       </div>
     </form>
@@ -64,7 +66,28 @@
   </table>
   </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="loading_modal" tabindex="-1" aria-labelledby="loading_modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loading_modalLabel">取得中</h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <div class="spinner-border hidden" role="status" id="loading">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block script %}
 <script src="{{url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
@@ -73,5 +96,9 @@
   $(document).ready(function() {
     $('#example').DataTable();
   } );
+
+  $('#search_button').click(function(){
+    $('#loading').removeClass('hidden')
+  })
 </script>
 {% endblock %}
