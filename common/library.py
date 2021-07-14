@@ -19,15 +19,17 @@ api = tweepy.API(auth)
 api = tweepy.API(auth)
 
 def tweet_gets(target , count):
+  """ツイート文字検索
+    Args:
+      target(string):検索したい文字列
+      count(int):検索したい数
+    Returns:
+      True:
+        取得したツイートの情報がjsonで返ってくる
+      False:
+    Examples:
+      フリーワード、ハッシュダグでツイートを検索する関数
+  """
   tweets = api.search(q=[target], count=count)
-  # for tweet in tweets:
-  #   print('------------------------------')
-  #   print(f"ユーザーID：{tweet.user.screen_name}")
-  #   print(f"プロフィール：{tweet.user.description}")
-  #   print(f"ツイート内容：{tweet.text}")
-  #   print(f"投稿日時：{tweet.created_at}")
-  #   for hashtag in tweet.entities['hashtags']:
-  #     print(f"使用していたハッシュタグ：{hashtag['text']}")
-  #   print("")
   return tweets
 
