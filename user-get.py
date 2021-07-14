@@ -1,5 +1,7 @@
+from route.main_route import tweet_search
 import tweepy
 import key_dic
+import datetime
 
 """"
 Twitterのキー
@@ -20,7 +22,7 @@ api = tweepy.API(auth)
 Account = "@Eternal_door"  # 取得したいユーザーのユーザーIDを代入
 tweets = api.user_timeline(Account, count=1, page=1)
 num = 1  # ツイート数を計算するための変数
-for tweet in tweets:
+# for tweet in tweets:
   # print('アカウント名 : ', tweet.user.screen_name)  # ユーザー名
   # print('投稿日時 : ', tweet.created_at)      # 呟いた日時
   # print(tweet.text)                  # ツイート内容
@@ -29,5 +31,5 @@ for tweet in tweets:
   # print('ツイート数 : ', num)  # ツイート数
   # print('=' * 80)  # =を80個表示
   # num += 1  # ツイート数を計算
-  print(tweet.created_at)
+print(tweets[0].created_at + datetime.timedelta(hours=9))
 

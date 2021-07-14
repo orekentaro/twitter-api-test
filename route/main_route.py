@@ -34,3 +34,8 @@ def get_tweet():
 def get_tweet_details(id):
   """取得ツイート詳細画面を表示するルート"""
   return MainModel.get_tweet_details(id)
+
+@main_route.route('/get_user', methods=['POST'])
+def get_user():
+  """ツイート出力画面を表示するルート"""
+  return MainModel.get_user()

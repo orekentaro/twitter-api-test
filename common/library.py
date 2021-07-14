@@ -23,6 +23,16 @@ api = tweepy.API(auth)
 BaseModel = BaseModel()
 
 
+def set_gmt_jp(time):
+  """ツイート時間を日本時刻に戻す
+    Args:
+      time : twitterのtweet.created_at
+    Returns:
+      True:
+        日本時間になって返ってくる
+  """
+  return time + datetime.timedelta(hours=9)
+
 def tweet_gets(target , count):
   """ツイート文字検索
     Args:
@@ -126,6 +136,7 @@ def save_tweet(tweet_id_seq, search_no_seq, user, tweet):
     Examples:
       フリーワード、ハッシュダグ、ユーザー検索で使用する
   """
+  tweet.created_at = set_gmt_jp(tweet.created_at)
   with BaseModel.start_transaction(False) as tx:
     sql = """
       INSERT INTO
@@ -205,3 +216,58 @@ def date_format(hiduke):
       return None
   except Exception:
     raise Exception("日付の形式が正しくありません")
+
+def get_user(target, count):
+  """ユーザー別ツイート検索
+    Args:
+      target(string):検索したい文字列
+      count(int):検索したい数
+    Returns:
+      True:
+        取得したツイートの情報がjsonで返ってくる
+      False:
+    Examples:
+      @user_idでツイートを検索する関数
+  """
+  tweets = api.user_timeline(target, count=count)
+  return tweets
+
+def search_infos(status):
+  """ユーザー別ツイート検索
+    Args:
+      status(string):
+        :"si.status = '1'" :ユーザー検索
+        :"si.status = '0'" :ツイート検索
+    Returns:
+      True:
+        取得したツイートの情報がjsonで返ってくる
+      False:
+    Examples:
+      @user_idでツイートを検索する関数
+  """
+  with BaseModel.start_transaction() as tx:
+    sql = f"""
+      SELECT
+        si.search_no as sn,
+        search_condition,
+        get_id,
+        get_at,
+        tw.tw_count,
+        si.status
+      FROM
+        search_info si
+      LEFT JOIN
+        (SELECT COUNT(*) as tw_count , search_no FROM tweet GROUP BY search_no ) tw
+      ON 
+        si.search_no = tw.search_no
+      WHERE
+        {status}
+      ORDER BY
+        get_at DESC
+      """
+    search_infos = tx.find_all(sql)
+
+    for info in search_infos:
+      info['get_at'] = date_format(info['get_at'])
+    
+  return search_infos

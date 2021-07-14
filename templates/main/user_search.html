@@ -1,8 +1,104 @@
 {% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/datatables.min.css') }}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/buttons.bootstrap5.min.css') }}">
+<style>
+</style>
 {% endblock %}
 {%- extends "base.html" %}
 {%- block content %}
-  user検索
+<div class="card m-5 p-1">
+  <div class="card-body">
+    <h3>ユーザー検索</h3>
+    <form class="row g-3" action="{{url_for('main_route.get_user')}}" method="POST">
+      <div class="input-group mb-3">
+        <div class="col-md-7  px-2">
+          <input class="form-control" type="text" name="target" placeholder="ユーザーIDを'@'付きで入力してください" aria-label="default input example">
+        </div>
+        <div class="col-md-3  px-2">
+          <input class="form-control" type="number" name="count" placeholder="取得件数" aria-label="default input example">
+        </div>
+        <div class="col-md-2 ">
+          <button class="btn btn btn-primary" type="submit" id="search_button" data-bs-toggle="modal" data-bs-target="#loading_modal">検索</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="card m-5 p-1">
+  <div class="card-body">
+    <h5>Tweet取得履歴</h5>
+    <table id="example" class="table table-hover table-light" style="width:100%">
+      <thead>
+          <tr>
+            <th></th>
+            <th>検索内容</th>
+            <th>取得件数</th>
+            <th>取得日時</th>
+            <th>取得者</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for info in search_infos %}
+        <tr>
+          <td>
+            <a href="{{url_for('main_route.get_tweet_details', id=info['sn'])}}">
+              <button class="btn btn btn-primary btn-sm" type="button" id="inputGroupFileAddon03">詳細</button>
+            </a>
+          </td>
+          <td>
+            {{info['search_condition']}}
+          </td>
+          <td>{{info['tw_count']}}件</td>
+          <td>{{info['get_at']}}</td>
+          <td>{{info['get_id']}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+          <tr>
+            <th></th>
+            <th>検索内容</th>
+            <th>取得件数</th>
+            <th>取得日時</th>
+            <th>取得者</th>
+          </tr>
+      </tfoot>
+  </table>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="loading_modal" tabindex="-1" aria-labelledby="loading_modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loading_modalLabel">取得中</h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <div class="spinner-border hidden" role="status" id="loading">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block script %}
+<script src="{{url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+<script src="{{url_for('static', filename='js/dataTables.bootstrap5.min.js') }}"></script>
+<script>
+  $(document).ready(function() {
+    $('#example').DataTable();
+  } );
+
+  $('#search_button').click(function(){
+    $('#loading').removeClass('hidden')
+  })
+</script>
 {% endblock %}
