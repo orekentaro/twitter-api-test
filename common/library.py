@@ -39,11 +39,14 @@ def tweet_gets(target , count):
   return tweets
 
 
-def search_condition(search_no_seq, target):
+def search_condition(search_no_seq, target, status):
   """検索条件保存
     Args:
       search_no_seq(int): 検索条件のシーケンス
       target(string):フォームから取得した検索条件
+      status(string): 
+        0: 文字列検索
+        1: ユーザー検索
     Returns:
       なし
     Examples:
@@ -68,7 +71,7 @@ def search_condition(search_no_seq, target):
       target,
       'ながと',
       datetime.datetime.now(),
-      '0'
+      status
     ]
     tx.save(sql, insert_sarch_index)
 

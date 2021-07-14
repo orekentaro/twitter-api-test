@@ -29,3 +29,8 @@ def tweet_out():
 def get_tweet():
   """ツイート出力画面を表示するルート"""
   return MainModel.get_tweet()
+
+@main_route.route('/get_tweet_details/<id>')
+def get_tweet_details(id):
+  """取得ツイート詳細画面を表示するルート"""
+  return MainModel.get_tweet_details(id)

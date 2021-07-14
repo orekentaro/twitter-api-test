@@ -11,6 +11,8 @@ class MainModel(BaseModel):
     return render_template('main/user_search.html', user_search=True)
 
   def tweet_search(self):
+    """ツイート検索画面アンド一覧
+    """
     with self.start_transaction() as tx:
       sql = """
         SELECT
@@ -18,13 +20,16 @@ class MainModel(BaseModel):
           search_condition,
           get_id,
           get_at,
-          tw.tw_count
+          tw.tw_count,
+          si.status
         FROM
           search_info si
         LEFT JOIN
           (SELECT COUNT(*) as tw_count , search_no FROM tweet GROUP BY search_no ) tw
         ON 
           si.search_no = tw.search_no
+        WHERE
+          si.status='0'
         """
       search_infos = tx.find_all(sql)
 
@@ -37,6 +42,8 @@ class MainModel(BaseModel):
     return render_template('main/tweet_out.html', tweet_out=True)
 
   def get_tweet(self):
+    """ツイート取得処理
+    """
     target = request.form['target']
     count = request.form['count']
 
@@ -48,7 +55,7 @@ class MainModel(BaseModel):
       search_no_seq = tx.find_one(sql)['search_no_seq']
 
       #検索条件保存
-      search_condition(search_no_seq, target)
+      search_condition(search_no_seq, target, '0')
 
       """取得ツイートを変数に
       """
@@ -92,5 +99,26 @@ class MainModel(BaseModel):
 
             #ハッシュタグ保存
             save_hashtag(tag_id_seq, hashtag, tweet_id_seq)
-    flash(f"ツイートを取得しました!({target}:{count}件)", "alert-primary")
+    flash(f"ツイートを取得しました!　（{target}:{count}件）", "alert-primary")
     return redirect(url_for('main_route.tweet_search'))
+
+  def get_tweet_details(self, id):
+    """ツイート検索画面アンド一覧
+    """
+    with self.start_transaction() as tx:
+      sql = """
+        SELECT
+          user_id,
+          post_content,
+          favo_count,
+          rt_count,
+          post_time
+        FROM
+          tweet
+        WHERE
+          search_no=%s
+        """
+      get_tweets = tx.find_all(sql,[id])
+
+
+    return render_template('main/get_tweet_details.html',get_tweets=get_tweets, user_search=True)
