@@ -1,6 +1,6 @@
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for, flash
 from models.base_model import BaseModel
-from common.library import tweet_gets, search_condition, save_user, save_tweet, save_hashtag
+from common.library import tweet_gets, search_condition, save_user, save_tweet, save_hashtag, date_format
 import datetime
 
 class MainModel(BaseModel):
@@ -11,7 +11,27 @@ class MainModel(BaseModel):
     return render_template('main/user_search.html', user_search=True)
 
   def tweet_search(self):
-    return render_template('main/tweet_search.html', tweet_search=True)
+    with self.start_transaction() as tx:
+      sql = """
+        SELECT
+          si.search_no as sn,
+          search_condition,
+          get_id,
+          get_at,
+          tw.tw_count
+        FROM
+          search_info si
+        LEFT JOIN
+          (SELECT COUNT(*) as tw_count , search_no FROM tweet GROUP BY search_no ) tw
+        ON 
+          si.search_no = tw.search_no
+        """
+      search_infos = tx.find_all(sql)
+
+      for info in search_infos:
+        info['get_at'] = date_format(info['get_at'])
+
+    return render_template('main/tweet_search.html', tweet_search=True, search_infos=search_infos)
 
   def tweet_out(self):
     return render_template('main/tweet_out.html', tweet_out=True)
@@ -72,4 +92,5 @@ class MainModel(BaseModel):
 
             #ハッシュタグ保存
             save_hashtag(tag_id_seq, hashtag, tweet_id_seq)
-    return 'OK'
+    flash(f"ツイートを取得しました!({target}:{count}件)", "alert-primary")
+    return redirect(url_for('main_route.tweet_search'))

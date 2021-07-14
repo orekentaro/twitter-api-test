@@ -40,7 +40,7 @@ def tweet_gets(target , count):
 
 
 def search_condition(search_no_seq, target):
-  """ツイート文字検索
+  """検索条件保存
     Args:
       search_no_seq(int): 検索条件のシーケンス
       target(string):フォームから取得した検索条件
@@ -55,23 +55,25 @@ def search_condition(search_no_seq, target):
         search_info(
           search_no,
           search_condition,
+          get_id,
           get_at,
           status
         )
         VALUES(
-          %s,%s,%s,%s
+          %s,%s,%s,%s,%s
         )
       """
     insert_sarch_index = [
       search_no_seq,
       target,
+      'ながと',
       datetime.datetime.now(),
       '0'
     ]
     tx.save(sql, insert_sarch_index)
 
 def save_user(get_user_no_seq, user):
-  """ツイート文字検索
+  """ユーザー保存
     Args:
       get_user_no_seq(int): ユーザーのシーケンス
       user(json):ツイート情報からユーザーの情報だけを取得したjson
@@ -91,12 +93,10 @@ def save_user(get_user_no_seq, user):
           follower,
           profile,
           tweet_count,
-          status,
-          created_id,
-          created_at
+          status
         )
         VALUES(
-          %s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+          %s,%s,%s,%s,%s,%s,%s,%s
         )
       """
     insert_get_user_index = [
@@ -108,13 +108,11 @@ def save_user(get_user_no_seq, user):
       user.description,
       user.statuses_count,
       "0",
-      'test_user',
-      datetime.datetime.now()
     ]
     tx.save(sql, insert_get_user_index)
 
 def save_tweet(tweet_id_seq, search_no_seq, user, tweet):
-  """ツイート文字検索
+  """ツイート保存
     Args:
       tweet_id_seq(int): ツイートのシーケンス
       search_no_seq(int): 検索条件のシーケンス
@@ -157,7 +155,7 @@ def save_tweet(tweet_id_seq, search_no_seq, user, tweet):
     tx.save(sql, insert_get_tweet_index)
 
 def save_hashtag(tag_id_seq, hashtag, tweet_id_seq):
-  """ツイート文字検索
+  """ハッシュタグ保存
     Args:
       tag_id_seq(int): ハッシュタグのシーケンス
       tweet_id_seq(int): ツイート番号のシーケンス
@@ -181,3 +179,26 @@ def save_hashtag(tag_id_seq, hashtag, tweet_id_seq):
       """
     tag_list = [tag_id_seq, hashtag, tweet_id_seq]
     tx.save(sql, tag_list)
+
+def date_format(hiduke):
+  """日付のフォーマット（%Y/%m/%d %H:%M or %Y/%m/%d）
+    Args:
+      hiduke(datetime.date か datetime.datetime型):主にnow()やtoday()で持ってきた時間か、ＤＢ内の時間に使用
+    Returns:
+      True:
+        datetime.date(2021, 3, 10) => 例 2021/03/10
+        datetime.datetime(2021, 3, 10, 20, 17, 46, 726575) => 例 2021/03/10 20:17
+      False:
+        型が上記の2つ以外のものだったらexceptでエラーを出す。
+    Examples:
+      引数にdatetime.date か datetime.datetime型を入れるだけでフォーマット完了
+  """
+  try:
+    if type(hiduke) is datetime.datetime:
+      return hiduke.strftime("%Y/%m/%d %H:%M")
+    elif type(hiduke) is datetime.date:
+      return hiduke.strftime("%Y/%m/%d")
+    elif hiduke is None:
+      return None
+  except Exception:
+    raise Exception("日付の形式が正しくありません")

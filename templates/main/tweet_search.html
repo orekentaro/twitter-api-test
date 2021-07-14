@@ -31,29 +31,31 @@
             <th></th>
             <th>検索内容</th>
             <th>取得件数</th>
-            <th>取得日</th>
+            <th>取得日時</th>
             <th>取得者</th>
           </tr>
       </thead>
       <tbody>
+        {% for info in search_infos %}
         <tr>
           <td>
             <button class="btn btn btn-primary btn-sm" type="button" id="inputGroupFileAddon03">詳細</button>
           </td>
           <td>
-            #駆け出しエンジニアと繋がりたい
+            {{info['search_condition']}}
           </td>
-          <td>200件</td>
-          <td>2021/07/13</td>
-          <td>永戸</td>
+          <td>{{info['tw_count']}}件</td>
+          <td>{{info['get_at']}}</td>
+          <td>{{info['get_id']}}</td>
         </tr>
+        {% endfor %}
       </tbody>
       <tfoot>
           <tr>
             <th></th>
             <th>検索内容</th>
             <th>取得件数</th>
-            <th>取得日</th>
+            <th>取得日時</th>
             <th>取得者</th>
           </tr>
       </tfoot>
