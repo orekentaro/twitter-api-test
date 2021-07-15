@@ -1,13 +1,71 @@
-from flask import render_template, request, redirect, url_for, flash
+import re
+from flask import render_template, request, redirect, url_for, flash, session
 from models.base_model import BaseModel
 from common.library import tweet_gets, search_condition, save_user, save_tweet, save_hashtag, get_user, search_infos, check_form, tweet_list
 import datetime
+from werkzeug.security import check_password_hash, generate_password_hash
 
 class MainModel(BaseModel):
   def login(self):
     return render_template('main/login.html')
+  
+  def log_out(self):
+    session.clear()
+    flash("ログアウト成功！", "alert-primary")
+    return redirect(url_for('main_route.login'))
 
+  def login_check(self):
+    admin_id = request.form['user_id']
+    password = request.form['password']
+    with self.start_transaction() as tx:
+      sql = """
+          SELECT
+            admin_id,
+            name,
+            email,
+            password,
+            init_flag,
+            lock_flag,
+            dummy_password,
+            status
+          FROM
+            admin_user
+          WHERE
+            admin_id = %s
+          """
+      user = tx.find_one(sql, [admin_id])
 
+    if not user:
+      """IDが未登録の場合"""
+      flash("アカウントが登録されていません", "alert-danger")
+      return redirect('main_route.login')
+
+    if user['lock_flag'] == "1":
+      """アカウントにロックフラグが立っている場合"""
+      flash("アカウントがロックされています", "alert-danger")
+      return redirect(url_for('main_route.login'))
+
+    if user['status'] == "9":
+      """アカウントが削除済の場合"""
+      flash("アカウントが削除されています。管理者に連絡してください。", "alert-danger")
+      return redirect(url_for('main_route.login'))
+
+    if user['init_flag'] == '1':
+      '''初期化フラグが立っている場合'''
+      if password == user['dummy_password']:
+        '''仮パスワードパスワードが一致した場合'''
+        return render_template('system/user_edit.html', new_add=True, user=user)
+      else:
+        flash("仮パスワードが間違ってます。", "alert-danger")
+        return redirect(url_for('main_route.login'))
+
+    if not check_password_hash(user["password"], password):
+      flash("パスワードが間違ってます。", "alert-danger")
+      return redirect(url_for('main_route.login'))
+
+    session['login_id'] = admin_id
+    flash("ログイン成功！", "alert-primary")
+    return redirect(url_for('main_route.top_page'))
 
   def top_page(self):
     with self.start_transaction() as tx:

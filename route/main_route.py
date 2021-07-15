@@ -11,6 +11,18 @@ def login():
   """ログイン画面"""
   return MainModel.login()
 
+
+@main_route.route('/login', methods=['POST'])
+def login_check():
+  """ログイン処理"""
+  return MainModel.login_check()
+
+
+@main_route.route('/log_out')
+def log_out():
+  """ログアウト処理"""
+  return MainModel.log_out()
+
 @main_route.route('/')
 def top_page():
   """トップページを表示するルート"""
