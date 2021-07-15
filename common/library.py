@@ -271,3 +271,35 @@ def search_infos(status):
       info['get_at'] = date_format(info['get_at'])
     
   return search_infos
+
+def check_form(target, count, status):
+  if target =='' and count == '':
+    parmams = {"message" : "検索文字、検索数を入力してください"}
+    return parmams
+  
+  if target =='':
+    parmams = {"message" : "検索文字を入力してください"}
+    return parmams
+
+  if count =='':
+    parmams = {"message" : "検索数を入力してください"}
+    return parmams
+  
+  if not count.isdigit():
+    parmams = {"message" : "検索数は数字を入力してください"}
+    return parmams
+  
+  if target[0] == '@':
+    if status == '0':
+      parmams = {"message" : "ユーザー検索はできません。＠を外してください"}
+      return parmams
+
+  if target[0] is not '@':
+    if status == '1':
+      parmams = {"message" : "文字列の先頭に@をつけてください"}
+      return parmams
+
+  if status == '1':
+    if not re.compile(r'^[a-zA-Z0-9_]+$').match(target[1:]):
+      parmams = {"message" : "ユーザー名は半角英数字と_のみ使用できます。"}
+      return parmams

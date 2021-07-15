@@ -2,7 +2,53 @@
 {% endblock %}
 {%- extends "base.html" %}
 {%- block content %}
-  topPage
+<h5>取得ツイート一覧</h5>
+<table id="example" class="table table-hover table-light" style="width:100%">
+  <thead>
+      <tr>
+        <th>ユーザー名</th>
+        <th>ユーザーID</th>
+        <th>投稿内容</th>
+        <th>いいね数</th>
+        <th>RT数</th>
+        <th>投稿日時</th>
+      </tr>
+  </thead>
+  <tbody>
+    {% for info in get_tweets %}
+    <tr>
+      <td>
+        {{info['user_name']}}
+      </td>
+      <td>
+        <a href="https://twitter.com/{{info['user_id']}}" target="_blank">@{{info['user_id']}}</a>
+      </td>
+      <td>
+        {{info['post_content']}}
+      </td>
+      <td>
+        {{info['favo_count']}}
+      </td>
+      <td>
+        {{info['rt_count']}}
+      </td>
+      <td>
+        {{info['post_time']}}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>ユーザー名</th>
+      <th>ユーザーID</th>
+      <th>投稿内容</th>
+      <th>いいね数</th>
+      <th>RT数</th>
+      <th>投稿日時</th>
+    </tr>
+  </tfoot>
+</table>
 {% endblock %}
 {% block script %}
 {% endblock %}
