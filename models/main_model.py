@@ -63,7 +63,7 @@ class MainModel(BaseModel):
       flash("パスワードが間違ってます。", "alert-danger")
       return redirect(url_for('main_route.login'))
 
-    session['login_id'] = admin_id
+    session['login_user'] = admin_id
     flash("ログイン成功！", "alert-primary")
     return redirect(url_for('main_route.top_page'))
 
@@ -89,7 +89,31 @@ class MainModel(BaseModel):
         """
       users = tx.find_all(sql)
 
-    return render_template('main/top_page.html', home=True, users=users)
+      sql = f"""
+        SELECT
+        DISTINCT
+          t1.user_id,
+          t1.user_name,
+          t1.follow,
+          t1.follower,
+          t1.profile,
+          t1.tweet_count,
+          t1.get_time
+        FROM
+          admin_user au
+        LEFT JOIN
+          twitter_user t1
+          ON 
+            au.admin_id = t1.user_id
+        WHERE get_time = (
+          SELECT MAX(get_time)
+          FROM twitter_user t2
+          WHERE t1.user_id = t2.user_id
+          )
+        """
+      admin_users = tx.find_all(sql)
+
+    return render_template('main/top_page.html', home=True, users=users, admin_users=admin_users)
 
   def user_search(self):
     """ユーザー検索画面アンド一覧
