@@ -5,8 +5,6 @@
   <title>offgrid twittr api</title>
   <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{url_for('static', filename='css/all.min.css') }}">
-  {% block css %}
-  {% endblock %}
 </head>
 
 <body>
@@ -18,26 +16,6 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link{% if home %} active {% endif %}" aria-current="page" href="{{ url_for('main_route.top_page') }}">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link{% if tweet_search %} active {% endif %}" href="{{ url_for('main_route.tweet_search') }}">ツイート検索</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link{% if user_search %} active {% endif %}" href="{{ url_for('main_route.user_search') }}">ユーザー検索</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link{% if tweet_out %} active {% endif %}" href="{{ url_for('main_route.tweet_out') }}">ツイート出力</a>
-          </li>
-        </ul>
-        <ul class="navbar-nav ms-auto">
-          <!-- Navbar Search -->
-          <li class="nav-item">
-            <a href="#" class="nav-link active">ログアウト</a>
-          </li>
-        </ul>
       </div>
     </div>
   </nav>
@@ -54,15 +32,28 @@
   {% endwith %}
   <div class="card m-5 p-1">
     <div class="card-body">
-  {% block content %}
-  {% endblock %}
+      <form action="" >
+        <div class="d-grid gap-2 col-6  mx-auto">
+          <div class="mb-3">
+            <label for="staticEmail" class="col-sm-6 col-form-label">Email</label>
+            <div class="col-sm-12">
+              <input type="text" class="form-control " id="staticEmail">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="inputPassword" class="col-sm-6 col-form-label">Password</label>
+            <div class="col-sm-12">
+              <input type="password" class="form-control " id="inputPassword">
+            </div>
+          </div>
+          <button class="btn mb-3" type="submit" style="background-color: rgba(29,161,242,1.00); color: rgb(255, 255, 255);">ログイン！</button>
+        </div>
+      </form>
     </div>
   </div>
   <script src="{{url_for('static', filename='js/bootstrap.min.js') }}"></script>
   <script src="{{url_for('static', filename='js/popper.min.js') }}"></script>
   <script src="{{url_for('static', filename='js/jquery.js') }}"></script>
-  {% block script %}
-  {% endblock %}
 </body>
 
 </html>

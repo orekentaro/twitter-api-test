@@ -5,6 +5,12 @@ main_route = Blueprint('main_route', __name__, url_prefix='/offgrid_twitter_api/
 MainModel = MainModel()
 
 
+
+@main_route.route('/login')
+def login():
+  """ログイン画面"""
+  return MainModel.login()
+
 @main_route.route('/')
 def top_page():
   """トップページを表示するルート"""

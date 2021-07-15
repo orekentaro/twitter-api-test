@@ -4,6 +4,11 @@ from common.library import tweet_gets, search_condition, save_user, save_tweet, 
 import datetime
 
 class MainModel(BaseModel):
+  def login(self):
+    return render_template('main/login.html')
+
+
+
   def top_page(self):
     with self.start_transaction() as tx:
       sql = f"""
