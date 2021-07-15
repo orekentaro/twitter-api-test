@@ -6,105 +6,112 @@
 {%- block content %}
 <div class="card m-5 p-1">
   <div class="card-body">
-    
-    <h5>管理者ユーザー一覧</h5>
-    <table id="admin_users" class="table table-hover table-light" style="width:100%">
-      <thead>
-          <tr>
-            <th>ユーザー名</th>
-            <th>ユーザーID</th>
-            <th>フォロー数</th>
-            <th>フォロワー数</th>
-            <th>ツイート数</th>
-            <th>プロフィール</th>
-          </tr>
-      </thead>
-      <tbody>
-        {% for user in admin_users %}
-        <tr>
-          <td>
-            {{user['user_name']}}
-          </td>
-          <td>
-            <a href="https://twitter.com/{{user['user_id']}}" target="_blank">@{{user['user_id']}}</a>
-          </td>
-          <td>
-            {{user['follow']}}
-          </td>
-          <td>
-            {{user['follower']}}
-          </td>
-          <td>
-            {{user['tweet_count']}}
-          </td>
-          <td>
-            {{user['profile']}}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-      <tfoot>
-        <tr>
-          <th>ユーザー名</th>
-          <th>ユーザーID</th>
-          <th>フォロー数</th>
-          <th>フォロワー数</th>
-          <th>ツイート数</th>
-          <th>プロフィール</th>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-</div>
-<div class="card m-5 p-1">
-  <div class="card-body">
-    <h5>取得ユーザー一覧</h5>
-    <table id="users" class="table table-hover table-light" style="width:100%">
-      <thead>
-          <tr>
-            <th>ユーザー名</th>
-            <th>ユーザーID</th>
-            <th>フォロー数</th>
-            <th>フォロワー数</th>
-            <th>ツイート数</th>
-            <th>プロフィール</th>
-          </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-        <tr>
-          <td>
-            {{user['user_name']}}
-          </td>
-          <td>
-            <a href="https://twitter.com/{{user['user_id']}}" target="_blank">@{{user['user_id']}}</a>
-          </td>
-          <td>
-            {{user['follow']}}
-          </td>
-          <td>
-            {{user['follower']}}
-          </td>
-          <td>
-            {{user['tweet_count']}}
-          </td>
-          <td>
-            {{user['profile']}}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-      <tfoot>
-        <tr>
-          <th>ユーザー名</th>
-          <th>ユーザーID</th>
-          <th>フォロー数</th>
-          <th>フォロワー数</th>
-          <th>ツイート数</th>
-          <th>プロフィール</th>
-        </tr>
-      </tfoot>
-    </table>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="true">管理者アカウント</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="user-tab" data-bs-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="false">取得ユーザー</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+        <table id="admin_users" class="table table-hover table-light" style="width:100%">
+          <thead>
+              <tr>
+                <th>ユーザー名</th>
+                <th>ユーザーID</th>
+                <th>フォロー数</th>
+                <th>フォロワー数</th>
+                <th>ツイート数</th>
+                <th>プロフィール</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for user in admin_users %}
+            <tr>
+              <td>
+                {{user['user_name']}}
+              </td>
+              <td>
+                <a href="https://twitter.com/{{user['user_id']}}" target="_blank">@{{user['user_id']}}</a>
+              </td>
+              <td>
+                {{user['follow']}}
+              </td>
+              <td>
+                {{user['follower']}}
+              </td>
+              <td>
+                {{user['tweet_count']}}
+              </td>
+              <td>
+                {{user['profile']}}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>ユーザー名</th>
+              <th>ユーザーID</th>
+              <th>フォロー数</th>
+              <th>フォロワー数</th>
+              <th>ツイート数</th>
+              <th>プロフィール</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="user-tab">
+        <table id="users" class="table table-hover table-light" style="width:100%">
+          <thead>
+              <tr>
+                <th>ユーザー名</th>
+                <th>ユーザーID</th>
+                <th>フォロー数</th>
+                <th>フォロワー数</th>
+                <th>ツイート数</th>
+                <th>プロフィール</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr>
+              <td>
+                {{user['user_name']}}
+              </td>
+              <td>
+                <a href="https://twitter.com/{{user['user_id']}}" target="_blank">@{{user['user_id']}}</a>
+              </td>
+              <td>
+                {{user['follow']}}
+              </td>
+              <td>
+                {{user['follower']}}
+              </td>
+              <td>
+                {{user['tweet_count']}}
+              </td>
+              <td>
+                {{user['profile']}}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>ユーザー名</th>
+              <th>ユーザーID</th>
+              <th>フォロー数</th>
+              <th>フォロワー数</th>
+              <th>ツイート数</th>
+              <th>プロフィール</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
