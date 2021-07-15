@@ -305,7 +305,7 @@ def check_form(target, count, status):
       parmams = {"message" : "ユーザー名は半角英数字と_のみ使用できます。"}
       return parmams
 
-def tweet_list(where):
+def tweet_list(where=''):
   with BaseModel.start_transaction() as tx:
       sql = f"""
         SELECT

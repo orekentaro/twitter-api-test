@@ -17,7 +17,7 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
 api = tweepy.API(auth)
-tweets = api.search(q=['#Python'], count=1)
+tweets = api.search(q=['#駆け出しエンジニアと繋がりたい'], count=1)
 
 for tweet in tweets:
   # print('------------------------------')

@@ -5,7 +5,28 @@ import datetime
 
 class MainModel(BaseModel):
   def top_page(self):
-    return render_template('main/top_page.html', home=True,)
+    with self.start_transaction() as tx:
+      sql = f"""
+        SELECT
+        DISTINCT
+          user_id,
+          user_name,
+          follow,
+          follower,
+          profile,
+          tweet_count,
+          get_time
+        FROM
+          twitter_user t1
+        WHERE get_time = (
+          SELECT MAX(get_time)
+          FROM twitter_user t2
+          WHERE t1.user_id = t2.user_id
+          )
+        """
+      users = tx.find_all(sql)
+
+    return render_template('main/top_page.html', home=True, users=users)
 
   def user_search(self):
     """ユーザー検索画面アンド一覧
@@ -93,7 +114,7 @@ class MainModel(BaseModel):
   def get_tweet_details(self, id):
     """ツイート検索画面アンド一覧
     """
-    return render_template('main/get_tweet_details.html',get_tweets=tweet_list(f'WHERE search_no={id})', tweet_search=True))
+    return render_template('main/get_tweet_details.html',get_tweets=tweet_list(f'WHERE search_no={id}'), tweet_search=True)
 
   def get_user(self):
     target = request.form['target']
