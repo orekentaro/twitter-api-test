@@ -2,6 +2,8 @@ import tweepy
 import key_dic
 from models.main_model import BaseModel
 import datetime
+import re
+
 """"
 Twitterのキー
 """
@@ -232,7 +234,7 @@ def get_user(target, count):
   tweets = api.user_timeline(target, count=count)
   return tweets
 
-def search_infos(status):
+def search_infos(status=''):
   """ユーザー別ツイート検索
     Args:
       status(string):
@@ -260,7 +262,6 @@ def search_infos(status):
         (SELECT COUNT(*) as tw_count , search_no FROM tweet GROUP BY search_no ) tw
       ON 
         si.search_no = tw.search_no
-      WHERE
         {status}
       ORDER BY
         get_at DESC
@@ -303,3 +304,27 @@ def check_form(target, count, status):
     if not re.compile(r'^[a-zA-Z0-9_]+$').match(target[1:]):
       parmams = {"message" : "ユーザー名は半角英数字と_のみ使用できます。"}
       return parmams
+
+def tweet_list(where):
+  with BaseModel.start_transaction() as tx:
+      sql = f"""
+        SELECT
+          tweet_id,
+          user_name,
+          tw.user_id,
+          post_content,
+          favo_count,
+          rt_count,
+          post_time
+        FROM
+          tweet tw
+        LEFT JOIN
+          (SELECT DISTINCT user_id, user_name FROM twitter_user ) tu
+          ON 
+            tw.user_id=tu.user_id
+        {where}
+        ORDER BY
+          post_time DESC
+        """
+      get_tweets = tx.find_all(sql)
+  return get_tweets
