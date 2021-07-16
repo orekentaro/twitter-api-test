@@ -32,35 +32,43 @@
   {% endwith %}
   <div class="card m-5 p-1">
     <div class="card-body">
+      {% if confirm %}
+      <p class="text-center fw-light fs-6">入力内容を確認してください</p>
+      {% else %}
       <p class="text-center fw-light fs-6">create new account !</p>
+      {% endif %}
+      {% if confirm %}
+      <form action="{{url_for('main_route.created_account')}}" method="POST" >
+      {% else %}
       <form action="{{url_for('main_route.create_account_confirm')}}" method="POST" >
+      {% endif %}
         <div class="d-grid gap-2 col-6  mx-auto">
           <div class="mb-3">
             <label for="user_id" class="col-sm-6 col-form-label">User ID</label>
             <div class="col-sm-12">
               {% if confirm %} <p class="form-control ">{{user_id}}</p> {% endif %}
-              <input name="user_id" class="form-control " id="user_id" value="{{user_id}}" {% if confirm %} type="hidden" {% else %} type="text"  {% endif %}>
+              <input name="user_id" class="form-control " id="user_id" value="{{user_id}}" {% if confirm %} type="hidden" {% else %} type="text"  {% endif %} required>
             </div>
           </div>
           <div class="mb-3">
             <label for="name" class="col-sm-6 col-form-label">Name</label>
             <div class="col-sm-12">
               {% if confirm %} <p class="form-control ">{{name}}</p> {% endif %}
-              <input name="name" class="form-control " id="name"  value="{{name}}" {% if confirm %} type="hidden" {% else %} type="text"  {% endif %}>
+              <input name="name" class="form-control " id="name"  value="{{name}}" {% if confirm %} type="hidden" {% else %} type="text"  {% endif %} required>
             </div>
           </div>
           <div class="mb-3">
             <label for="email" class="col-sm-6 col-form-label">E-mail</label>
             <div class="col-sm-12">
               {% if confirm %} <p class="form-control ">{{email}}</p> {% endif %}
-              <input name="email" class="form-control " id="email" value="{{email}}" {% if confirm %} type="hidden" {% else %} type="text"  {% endif %}>
+              <input name="email" class="form-control " id="email" value="{{email}}" {% if confirm %} type="hidden" {% else %} type="text"  {% endif %} required>
             </div>
           </div>
           <div class="mb-3">
             <label for="password" class="col-sm-6 col-form-label">Password</label>
             <div class="col-sm-12">
               {% if confirm %} <p class="form-control ">{{ "●" * len}}</p> {% endif %}
-              <input name="password" class="form-control " id="password" value="{{password}}" {% if confirm %} type="hidden" {% else %} type="password"  {% endif %}>
+              <input name="password" class="form-control " id="password" value="{{password}}" {% if confirm %} type="hidden" {% else %} type="password"  {% endif %} required>
             </div>
           </div>
           <div class="mb-3">

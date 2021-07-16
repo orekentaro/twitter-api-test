@@ -6,7 +6,8 @@ NOT_REQUIRED_LOGIN = [
   'main_route.login_check',  # ログイン処理
   'static',  # css js
   'main_route.create_account',  # アカウント作成
-  'main_route.create_account_confirm'  # アカウント確認
+  'main_route.create_account_confirm',  # アカウント確認
+  'main_route.created_account'  # アカウント作成処理
 ]
 
 

@@ -1,3 +1,4 @@
+from os import name
 import re
 from flask import render_template, request, redirect, url_for, flash, session
 from models.base_model import BaseModel
@@ -70,9 +71,70 @@ class MainModel(BaseModel):
   def create_account(self):
     return render_template('main/create_account.html', create=True)
   
-  def create_account_confirm(sefl):
+  def create_account_confirm(self):
     password_length = len(request.form['password'])
+    with self.start_transaction() as tx:
+      sql = """
+            SELECT
+              admin_id,
+              name,
+              email,
+              password,
+              init_flag,
+              lock_flag,
+              dummy_password,
+              status
+            FROM
+              admin_user
+            WHERE
+              admin_id = %s
+            """
+      user = tx.find_one(sql, [request.form['user_id']])
+
+      if user:
+        flash("すでにアカウントが登録されています", "alert-danger")
+        return redirect(url_for('main_route.create_account'))
+      
+      if request.form['password'] != request.form['confirm_pass']:
+        flash("パスワードが一致しません", "alert-danger")
+        return render_template('main/create_account.html', user_id=request.form['user_id'], name=request.form['name'], email=request.form['email'])
+
+
+
     return render_template('main/create_account.html', confirm=True, user_id=request.form['user_id'], name=request.form['name'], email=request.form['email'], password=request.form['password'], confirm_pass=request.form['confirm_pass'], len = password_length)
+  
+  def created_account(self):
+    user_id = request.form['user_id']
+    name = request.form['name']
+    email = request.form['email']
+    password = generate_password_hash(request.form['password'])
+    with self.start_transaction(False) as tx:
+      sql = """
+            INSERT INTO
+              admin_user(
+                admin_id,
+                name,
+                email,
+                password,
+                status,
+                created_id,
+                updated_id,
+                created_at,
+                updated_at
+              )
+              VALUES(
+                %s,%s,%s,%s,%s,%s,%s,%s,%s
+              )
+            """
+      insert_admin_list = [
+        user_id, name, email, password, '0', 'create', 'create', datetime.datetime.now(), datetime.datetime.now()
+        ]
+
+      session['login_user'] = user_id
+      flash("アカウントを作成しました！", "alert-primary")
+      tx.save(sql, insert_admin_list)
+
+    return redirect(url_for('main_route.top_page'))
 
   def top_page(self):
     with self.start_transaction() as tx:

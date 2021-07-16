@@ -35,6 +35,11 @@ def create_account_confirm():
   """アカウント作成確認画面"""
   return MainModel.create_account_confirm()
 
+@main_route.route('/created_account', methods=['POST'])
+def created_account():
+  """アカウント作成確認画面"""
+  return MainModel.created_account()
+
 @main_route.route('/')
 def top_page():
   """トップページを表示するルート"""
