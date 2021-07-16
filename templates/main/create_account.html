@@ -38,34 +38,42 @@
           <div class="mb-3">
             <label for="user_id" class="col-sm-6 col-form-label">User ID</label>
             <div class="col-sm-12">
-              <input name="user_id" type="text" class="form-control " id="user_id">
+              {% if confirm %} <p class="form-control ">{{user_id}}</p> {% endif %}
+              <input name="user_id" class="form-control " id="user_id" value="{{user_id}}" {% if confirm %} type="hidden" {% else %} type="text"  {% endif %}>
             </div>
           </div>
           <div class="mb-3">
             <label for="name" class="col-sm-6 col-form-label">Name</label>
             <div class="col-sm-12">
-              <input name="name" type="text" class="form-control " id="name">
+              {% if confirm %} <p class="form-control ">{{name}}</p> {% endif %}
+              <input name="name" class="form-control " id="name"  value="{{name}}" {% if confirm %} type="hidden" {% else %} type="text"  {% endif %}>
             </div>
           </div>
           <div class="mb-3">
             <label for="email" class="col-sm-6 col-form-label">E-mail</label>
             <div class="col-sm-12">
-              <input name="email" type="text" class="form-control " id="email">
+              {% if confirm %} <p class="form-control ">{{email}}</p> {% endif %}
+              <input name="email" class="form-control " id="email" value="{{email}}" {% if confirm %} type="hidden" {% else %} type="text"  {% endif %}>
             </div>
           </div>
           <div class="mb-3">
             <label for="password" class="col-sm-6 col-form-label">Password</label>
             <div class="col-sm-12">
-              <input name="password" type="password" class="form-control " id="password">
+              {% if confirm %} <p class="form-control ">{{ "●" * len}}</p> {% endif %}
+              <input name="password" class="form-control " id="password" value="{{password}}" {% if confirm %} type="hidden" {% else %} type="password"  {% endif %}>
             </div>
           </div>
           <div class="mb-3">
-            <label for="confirm" class="col-sm-6 col-form-label">Confirm</label>
+            <label for="confirm_pass" class="col-sm-6 col-form-label">Confirm</label>
             <div class="col-sm-12">
-              <input name="confirm" type="password" class="form-control " id="confirm">
+              {% if confirm %} <p class="form-control ">{{ "●" * len}}</p> {% endif %}
+              <input name="confirm_pass" class="form-control " id="confirm_pass" value="{{confirm}}" {% if confirm %} type="hidden"  {% else %} type="password"  {% endif %}>
             </div>
           </div>
-          <button class="btn mb-3" type="submit" style="background-color: rgba(29,161,242,1.00); color: rgb(255, 255, 255);">確認</button>
+            <button class="btn mb-3" type="submit" style="background-color: rgba(29,161,242,1.00); color: rgb(255, 255, 255);">確認</button>
+            <a href="#" onclick="javascript:window.history.back(-1);return false;">
+              <p class="text-center fw-light fs-6" >back</p>
+            </a>
       </form>
     </div>
   </div>

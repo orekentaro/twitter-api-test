@@ -68,11 +68,11 @@ class MainModel(BaseModel):
     return redirect(url_for('main_route.top_page'))
   
   def create_account(self):
-    return render_template('main/create_account.html')
+    return render_template('main/create_account.html', create=True)
   
   def create_account_confirm(sefl):
-    print(request.form)
-    return 'OK'
+    password_length = len(request.form['password'])
+    return render_template('main/create_account.html', confirm=True, user_id=request.form['user_id'], name=request.form['name'], email=request.form['email'], password=request.form['password'], confirm_pass=request.form['confirm_pass'], len = password_length)
 
   def top_page(self):
     with self.start_transaction() as tx:
