@@ -274,38 +274,76 @@ def search_infos(status=''):
   return search_infos
 
 def check_form(target, count, status):
+  """フォームのバリデーション
+    Args:
+      target(string):検索したい文字列
+      count(int):検索したい数
+      status(string):
+        0: 文字列検索画面
+        1: ユーザーID検索画面
+    Returns:
+      入力エラーの場合メッセージが返される
+  """
   if target =='' and count == '':
+    """どちらも未入力の場合
+    """
     parmams = {"message" : "検索文字、検索数を入力してください"}
     return parmams
   
   if target =='':
+    """検索ワードがない場合
+    """
     parmams = {"message" : "検索文字を入力してください"}
     return parmams
 
   if count =='':
+    """取得数がない場合
+    """
     parmams = {"message" : "検索数を入力してください"}
     return parmams
   
   if not count.isdigit():
+    """取得数が数字以外の場合
+    """
     parmams = {"message" : "検索数は数字を入力してください"}
     return parmams
   
   if target[0] == '@':
+    """検索ワードがID
+    """
     if status == '0':
+      """ワード検索の場合
+      """
       parmams = {"message" : "ユーザー検索はできません。＠を外してください"}
       return parmams
 
   if target[0] is not '@':
+    """検索ワードがワード検索
+    """
     if status == '1':
+      """ユーザー検索の場合
+      """
       parmams = {"message" : "文字列の先頭に@をつけてください"}
       return parmams
 
   if status == '1':
+    """ユーザー検索の場合
+    """
     if not re.compile(r'^[a-zA-Z0-9_]+$').match(target[1:]):
+      """TwitterのID登録できる文字以外の場合
+      """
       parmams = {"message" : "ユーザー名は半角英数字と_のみ使用できます。"}
       return parmams
 
 def tweet_list(where=''):
+  """取得ツイート詳細画面
+    Args:
+      where(string): 検索一覧で遷移する際のID
+    Returns:
+      True:
+        取得詳細の情報がjsonで返ってくる
+      
+  """
   with BaseModel.start_transaction() as tx:
       sql = f"""
         SELECT

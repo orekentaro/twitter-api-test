@@ -23,6 +23,18 @@ def log_out():
   """ログアウト処理"""
   return MainModel.log_out()
 
+
+@main_route.route('/create_account')
+def create_account():
+  """アカウント作成画面"""
+  return MainModel.create_account()
+
+
+@main_route.route('/create_account_confirm', methods=['POST'])
+def create_account_confirm():
+  """アカウント作成確認画面"""
+  return MainModel.create_account_confirm()
+
 @main_route.route('/')
 def top_page():
   """トップページを表示するルート"""

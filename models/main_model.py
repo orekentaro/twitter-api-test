@@ -66,6 +66,13 @@ class MainModel(BaseModel):
     session['login_user'] = admin_id
     flash("ログイン成功！", "alert-primary")
     return redirect(url_for('main_route.top_page'))
+  
+  def create_account(self):
+    return render_template('main/create_account.html')
+  
+  def create_account_confirm(sefl):
+    print(request.form)
+    return 'OK'
 
   def top_page(self):
     with self.start_transaction() as tx:
@@ -199,7 +206,7 @@ class MainModel(BaseModel):
       return redirect(url_for('main_route.tweet_search'))
 
   def get_tweet_details(self, id):
-    """ツイート検索画面アンド一覧
+    """取得ツイート詳細画面
     """
     return render_template('main/get_tweet_details.html',get_tweets=tweet_list(f'WHERE search_no={id}'), tweet_search=True)
 

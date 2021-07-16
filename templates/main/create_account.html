@@ -32,26 +32,41 @@
   {% endwith %}
   <div class="card m-5 p-1">
     <div class="card-body">
-      <form action="{{url_for('main_route.login_check')}}" method="POST" >
+      <p class="text-center fw-light fs-6">create new account !</p>
+      <form action="{{url_for('main_route.create_account_confirm')}}" method="POST" >
         <div class="d-grid gap-2 col-6  mx-auto">
           <div class="mb-3">
-            <label for="staticEmail" class="col-sm-6 col-form-label">User ID</label>
+            <label for="user_id" class="col-sm-6 col-form-label">User ID</label>
             <div class="col-sm-12">
-              <input name="user_id" type="text" class="form-control " id="staticEmail">
+              <input name="user_id" type="text" class="form-control " id="user_id">
             </div>
           </div>
           <div class="mb-3">
-            <label for="inputPassword" class="col-sm-6 col-form-label">Password</label>
+            <label for="name" class="col-sm-6 col-form-label">Name</label>
             <div class="col-sm-12">
-              <input name="password" type="password" class="form-control " id="inputPassword">
+              <input name="name" type="text" class="form-control " id="name">
             </div>
           </div>
-          <button class="btn mb-3" type="submit" style="background-color: rgba(29,161,242,1.00); color: rgb(255, 255, 255);">ログイン！</button>
+          <div class="mb-3">
+            <label for="email" class="col-sm-6 col-form-label">E-mail</label>
+            <div class="col-sm-12">
+              <input name="email" type="text" class="form-control " id="email">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="col-sm-6 col-form-label">Password</label>
+            <div class="col-sm-12">
+              <input name="password" type="password" class="form-control " id="password">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="confirm" class="col-sm-6 col-form-label">Confirm</label>
+            <div class="col-sm-12">
+              <input name="confirm" type="password" class="form-control " id="confirm">
+            </div>
+          </div>
+          <button class="btn mb-3" type="submit" style="background-color: rgba(29,161,242,1.00); color: rgb(255, 255, 255);">確認</button>
       </form>
-      <a href="{{url_for('main_route.create_account')}}">
-        <p class="text-center fw-light fs-6">create new account !</p>
-      </a>
-    </div>
     </div>
   </div>
   <script src="{{url_for('static', filename='js/bootstrap.min.js') }}"></script>

@@ -4,6 +4,9 @@ from flask import session, request, redirect, url_for, flash
 NOT_REQUIRED_LOGIN = [
   'main_route.login',  # ログイン
   'main_route.login_check',  # ログイン処理
+  'static',  # css js
+  'main_route.create_account',  # アカウント作成
+  'main_route.create_account_confirm'  # アカウント確認
 ]
 
 
