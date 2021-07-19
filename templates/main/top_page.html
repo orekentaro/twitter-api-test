@@ -25,6 +25,7 @@
                 <th>フォロワー数</th>
                 <th>ツイート数</th>
                 <th>プロフィール</th>
+                <th>取得日時</th>
               </tr>
           </thead>
           <tbody>
@@ -48,6 +49,9 @@
               <td>
                 {{user['profile']}}
               </td>
+              <td>
+                {{user['get_time']}}
+              </td>
             </tr>
             {% endfor %}
           </tbody>
@@ -59,6 +63,7 @@
               <th>フォロワー数</th>
               <th>ツイート数</th>
               <th>プロフィール</th>
+              <th>取得日時</th>
             </tr>
           </tfoot>
         </table>
@@ -73,6 +78,7 @@
                 <th>フォロワー数</th>
                 <th>ツイート数</th>
                 <th>プロフィール</th>
+                <th>取得日時</th>
               </tr>
           </thead>
           <tbody>
@@ -96,6 +102,9 @@
               <td>
                 {{user['profile']}}
               </td>
+              <td>
+                {{user['get_time']}}
+              </td>
             </tr>
             {% endfor %}
           </tbody>
@@ -107,6 +116,7 @@
               <th>フォロワー数</th>
               <th>ツイート数</th>
               <th>プロフィール</th>
+              <th>取得日時</th>
             </tr>
           </tfoot>
         </table>
