@@ -2,7 +2,7 @@ from os import name
 import re
 from flask import render_template, request, redirect, url_for, flash, session
 from models.base_model import BaseModel
-from common.library import tweet_gets, search_condition, save_user, save_tweet, save_hashtag, get_user, search_infos, check_form, tweet_list
+from common.library import date_format, tweet_gets, search_condition, save_user, save_tweet, save_hashtag, get_user, search_infos, check_form, tweet_list
 import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -140,47 +140,47 @@ class MainModel(BaseModel):
     with self.start_transaction() as tx:
       sql = f"""
         SELECT
-        DISTINCT
-          user_id,
-          user_name,
+          tu.user_id,
+          tu.user_name,
           follow,
           follower,
           profile,
           tweet_count,
           get_time
         FROM
-          twitter_user t1
-        WHERE get_time = (
-          SELECT MAX(get_time)
-          FROM twitter_user t2
-          WHERE t1.user_id = t2.user_id
-          )
+          twitter_user tu
+        JOIN (SELECT MAX(user_no) as user_no, user_id FROM twitter_user GROUP BY user_id) max
+          ON
+            tu.user_no = max.user_no
         """
       users = tx.find_all(sql)
 
+      for user in users:
+        user['get_time'] = date_format(user['get_time'])
+
       sql = f"""
         SELECT
-        DISTINCT
-          t1.user_id,
-          t1.user_name,
-          t1.follow,
-          t1.follower,
-          t1.profile,
-          t1.tweet_count,
-          t1.get_time
+          tu.user_id,
+          tu.user_name,
+          follow,
+          follower,
+          profile,
+          tweet_count,
+          get_time
         FROM
-          admin_user au
-        LEFT JOIN
-          twitter_user t1
-          ON 
-            au.admin_id = t1.user_id
-        WHERE get_time = (
-          SELECT MAX(get_time)
-          FROM twitter_user t2
-          WHERE t1.user_id = t2.user_id
-          )
+          twitter_user tu
+        JOIN admin_user au
+          ON
+            tu.user_id = au.admin_id
+        JOIN (SELECT MAX(user_no) as user_no, user_id FROM twitter_user GROUP BY user_id) max
+          ON
+            tu.user_no = max.user_no
         """
       admin_users = tx.find_all(sql)
+
+      for admin_user in admin_users:
+        admin_user['get_time'] = date_format(admin_user['get_time'])
+
 
     return render_template('main/top_page.html', home=True, users=users, admin_users=admin_users)
 
