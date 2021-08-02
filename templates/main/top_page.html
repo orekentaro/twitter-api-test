@@ -1,125 +1,109 @@
 {% block css %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/datatables.min.css') }}">
 <link rel="stylesheet" href="{{url_for('static', filename='css/buttons.bootstrap5.min.css') }}">
+<style>
+
+</style>
 {% endblock %}
 {%- extends "base.html" %}
 {%- block content %}
 <div class="card m-5 p-1">
   <div class="card-body">
+    <div class="container">
+      <div class="row">
+        <div class="col-4">
+          <a href="{{ url_for('main_route.get_new_record') }}">
+            <button type="button" class="btn btn-primary">最新情報取得</button>
+          </a>
+        </div>
+        <div class="col-4 p-1">
+          【最終更新日：{{last_get}}】
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card m-5 p-1">
+  <div class="card-body">
     <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="true">管理者アカウント</a>
+        <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="true">総合ランキング</a>
       </li>
       <li class="nav-item" role="presentation">
-        <a class="nav-link" id="user-tab" data-bs-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="false">取得ユーザー</a>
+        <a class="nav-link" id="user-tab" data-bs-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="false">伸び率ランキング</a>
       </li>
     </ul>
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="admin" role="tabpanel" aria-labelledby="admin-tab">
-        <table id="admin_users" class="table table-hover table-light pt1" style="width:100%">
+        <table class="table">
           <thead>
-              <tr>
-                <th>ユーザー名</th>
-                <th>ユーザーID</th>
-                <th>フォロー数</th>
-                <th>フォロワー数</th>
-                <th>ツイート数</th>
-                <th>プロフィール</th>
-                <th>取得日時</th>
-              </tr>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">フォロワー数</th>
+            </tr>
           </thead>
           <tbody>
-            {% for user in admin_users %}
+            {% for user in follow_ranking %}
             <tr>
-              <td>
-                {{user['user_name']}}
-              </td>
-              <td>
-                <a href="https://twitter.com/{{user['user_id']}}" target="_blank">@{{user['user_id']}}</a>
-              </td>
-              <td>
-                {{user['follow']}}
-              </td>
-              <td>
-                {{user['follower']}}
-              </td>
-              <td>
-                {{user['tweet_count']}}
-              </td>
-              <td>
-                {{user['profile']}}
-              </td>
-              <td>
-                {{user['get_time']}}
-              </td>
+              <th scope="row">{{loop.index}}位</th>
+              <td>{{user['name']}}（{{user['follower']}}）</td>
             </tr>
-            {% endfor %}
+              {% endfor %}
           </tbody>
-          <tfoot>
+        </table>
+
+        <table class="table">
+          <thead>
             <tr>
-              <th>ユーザー名</th>
-              <th>ユーザーID</th>
-              <th>フォロー数</th>
-              <th>フォロワー数</th>
-              <th>ツイート数</th>
-              <th>プロフィール</th>
-              <th>取得日時</th>
+              <th scope="col"></th>
+              <th scope="col">ツイート数</th>
             </tr>
-          </tfoot>
+          </thead>
+          <tbody>
+            {% for user in tweet_ranking %}
+            <tr>
+              <th scope="row">{{loop.index}}位</th>
+              <td>{{user['name']}}（{{user['tweet_count']}}）</td>
+            </tr>
+              {% endfor %}
+          </tbody>
         </table>
       </div>
       <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="user-tab">
-        <table id="users" class="table table-hover table-light" style="width:100%">
+        <table class="table">
           <thead>
-              <tr>
-                <th>ユーザー名</th>
-                <th>ユーザーID</th>
-                <th>フォロー数</th>
-                <th>フォロワー数</th>
-                <th>ツイート数</th>
-                <th>プロフィール</th>
-                <th>取得日時</th>
-              </tr>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">フォロワー数</th>
+            </tr>
           </thead>
           <tbody>
-            {% for user in users %}
+            {% for user, count in follower_result %}
             <tr>
-              <td>
-                {{user['user_name']}}
-              </td>
-              <td>
-                <a href="https://twitter.com/{{user['user_id']}}" target="_blank">@{{user['user_id']}}</a>
-              </td>
-              <td>
-                {{user['follow']}}
-              </td>
-              <td>
-                {{user['follower']}}
-              </td>
-              <td>
-                {{user['tweet_count']}}
-              </td>
-              <td>
-                {{user['profile']}}
-              </td>
-              <td>
-                {{user['get_time']}}
-              </td>
+              <th scope="row">{{loop.index}}位</th>
+              <td>{{user}}（{{count}}）</td>
             </tr>
-            {% endfor %}
+              {% endfor %}
           </tbody>
-          <tfoot>
-            <tr>
-              <th>ユーザー名</th>
-              <th>ユーザーID</th>
-              <th>フォロー数</th>
-              <th>フォロワー数</th>
-              <th>ツイート数</th>
-              <th>プロフィール</th>
-              <th>取得日時</th>
-            </tr>
-          </tfoot>
         </table>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">ツイート数</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user, count in tweet_result %}
+            <tr>
+              <th scope="row">{{loop.index}}位</th>
+              <td>{{user}}（{{count}}）</td>
+            </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+      
       </div>
     </div>
   </div>

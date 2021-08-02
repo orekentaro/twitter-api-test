@@ -2,7 +2,66 @@
 {% endblock %}
 {%- extends "base.html" %}
 {%- block content %}
-  tweet出力
+<ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#word" role="tab" aria-controls="word" aria-selected="true">キーワード検索</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="hashtag-tab" data-bs-toggle="tab" href="#hashtag" role="tab" aria-controls="hashtag" aria-selected="false">ハッシュタグ検索</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="word" role="tabpanel" aria-labelledby="word-tab">
+    <h3></h3>
+    <form class="row g-3" action="{{ url_for('main_route.search_word') }}" method="POST">
+      <div class="input-group mb-3">
+        <div class="col-md-10  px-2">
+          <input class="form-control" type="text" name="target" placeholder="出力したいワードを入力してください" aria-label="default input example">
+        </div>
+        <!-- <div class="col-md-3  px-2">
+          <select class="form-select" aria-label="Default select example" name="count">
+            <option value="100">100件</option>
+            <option value="300">300件</option>
+            <option value="500">500件</option>
+            <option value="1000">1000件</option>
+            <option value="2000">2000件</option>
+            <option value="3000">3000件</option>
+          </select>
+        </div> -->
+        <div class="col-md-2 ">
+          <button class="btn btn btn-primary" type="submit" id="search_button" data-bs-toggle="modal" data-bs-target="#loading_modal">検索</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="tab-pane fade" id="hashtag" role="tabpanel" aria-labelledby="hashtag-tab">
+    <h3></h3>
+    <form class="row g-3" action="{{ url_for('main_route.search_tag') }}" method="POST">
+      <div class="input-group mb-3">
+        <div class="col-md-10 px-2">
+          <select class="form-select" aria-label="Default select example" name="target">
+            {% for tag in hash_tags %}
+            <option value="{{tag['detail']}}">{{tag['detail']}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <!-- <div class="col-md-3  px-2">
+          <select class="form-select" aria-label="Default select example" name="count">
+            <option value="100">100件</option>
+            <option value="300">300件</option>
+            <option value="500">500件</option>
+            <option value="1000">1000件</option>
+            <option value="2000">2000件</option>
+            <option value="3000">3000件</option>
+          </select>
+        </div> -->
+        <div class="col-md-2 ">
+          <button class="btn btn btn-primary" type="submit" id="search_button" data-bs-toggle="modal" data-bs-target="#loading_modal">検索</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
 {% block script %}
 {% endblock %}

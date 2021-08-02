@@ -1,0 +1,140 @@
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/datatables.min.css') }}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/buttons.bootstrap5.min.css') }}">
+{% endblock %}
+{%- extends "base.html" %}
+{%- block content %}
+<ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="true">管理者アカウント</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="user-tab" data-bs-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="false">取得ユーザー</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+    <table id="admin_users" class="table table-hover table-light pt1" style="width:100%">
+      <thead>
+          <tr>
+            <th>ユーザー名</th>
+            <th>ユーザーID</th>
+            <th>フォロー数</th>
+            <th>フォロワー数</th>
+            <th>ツイート数</th>
+            <th>プロフィール</th>
+            <th>取得日時</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for user in admin_users %}
+        <tr>
+          <td>
+            {{user['user_name']}}
+          </td>
+          <td>
+            <a href="https://twitter.com/{{user['user_id']}}" target="_blank">@{{user['user_id']}}</a>
+          </td>
+          <td>
+            {{user['follow']}}
+          </td>
+          <td>
+            {{user['follower']}}
+          </td>
+          <td>
+            {{user['tweet_count']}}
+          </td>
+          <td>
+            {{user['profile']}}
+          </td>
+          <td>
+            {{user['get_time']}}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>ユーザー名</th>
+          <th>ユーザーID</th>
+          <th>フォロー数</th>
+          <th>フォロワー数</th>
+          <th>ツイート数</th>
+          <th>プロフィール</th>
+          <th>取得日時</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="user-tab">
+    <table id="users" class="table table-hover table-light" style="width:100%">
+      <thead>
+          <tr>
+            <th>ユーザー名</th>
+            <th>ユーザーID</th>
+            <th>フォロー数</th>
+            <th>フォロワー数</th>
+            <th>ツイート数</th>
+            <th>プロフィール</th>
+            <th>取得日時</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>
+            {{user['user_name']}}
+          </td>
+          <td>
+            <a href="https://twitter.com/{{user['user_id']}}" target="_blank">@{{user['user_id']}}</a>
+          </td>
+          <td>
+            {{user['follow']}}
+          </td>
+          <td>
+            {{user['follower']}}
+          </td>
+          <td>
+            {{user['tweet_count']}}
+          </td>
+          <td>
+            {{user['profile']}}
+          </td>
+          <td>
+            {{user['get_time']}}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>ユーザー名</th>
+          <th>ユーザーID</th>
+          <th>フォロー数</th>
+          <th>フォロワー数</th>
+          <th>ツイート数</th>
+          <th>プロフィール</th>
+          <th>取得日時</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{{url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+<script src="{{url_for('static', filename='js/dataTables.bootstrap5.min.js') }}"></script>
+<script>
+  $(document).ready(function() {
+    $('#admin_users').DataTable();
+  } );
+
+  $(document).ready(function() {
+    $('#users').DataTable();
+  } );
+
+  $('#search_button').click(function(){
+    $('#loading').removeClass('hidden')
+  })
+</script>
+{% endblock %}

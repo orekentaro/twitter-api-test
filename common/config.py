@@ -12,4 +12,4 @@ def load_yaml(file_name):
 def get_config():
   """ configファイルをもとに必要なアプリケーションで使用する
   """
-  return load_yaml("./config.yml")
+  return load_yaml("./config/config.yml")
