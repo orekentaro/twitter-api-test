@@ -58,9 +58,22 @@
 {% block script %}
 <script src="{{url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
 <script src="{{url_for('static', filename='js/dataTables.bootstrap5.min.js') }}"></script>
+<script src="{{url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+<script src="{{url_for('static', filename='js/buttons.bootstrap5.min.js') }}"></script>
+<script src="{{url_for('static', filename='js/jszip.min.js') }}"></script>
+<script src="{{url_for('static', filename='js/pdfmake.min.js') }}"></script>
+<script src="{{url_for('static', filename='js/vfs_fonts.js') }}"></script>
+<script src="{{url_for('static', filename='js/buttons.html5.min.js') }}"></script>
+<script src="{{url_for('static', filename='js/buttons.print.min.js') }}"></script>
+<script src="{{url_for('static', filename='js/buttons.colVis.min.js') }}"></script>
 <script>
   $(document).ready(function() {
-    $('#example').DataTable();
-  } );
+    var table = $('#example').DataTable( {
+        lengthChange: false,
+        buttons: [ 'copy', 'excel', 'colvis' ]
+    } );
+    table.buttons().container()
+        .appendTo( '#example_wrapper .col-md-6:eq(0)' );
+} );
 </script>
 {% endblock %}

@@ -15,7 +15,12 @@
           <input class="form-control" type="text" name="target" placeholder="ユーザーIDを'@'付きで入力してください" aria-label="default input example">
         </div>
         <div class="col-md-3  px-2">
-          <input class="form-control" type="text" name="count" placeholder="取得件数" aria-label="default input example">
+          <select class="form-select" aria-label="Default select example" name="count">
+            <option value="10">10件</option>
+            <option value="30">30件</option>
+            <option value="50">50件</option>
+            <option value="100">100件</option>
+          </select>
         </div>
         <div class="col-md-2 ">
           <button class="btn btn btn-primary" type="submit" id="search_button" data-bs-toggle="modal" data-bs-target="#loading_modal">検索</button>

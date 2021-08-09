@@ -31,13 +31,18 @@
           <li class="nav-item">
             <a class="nav-link{% if tweet_out %} active {% endif %}" href="{{ url_for('main_route.tweet_out') }}">ツイート出力</a>
           </li>
-        </ul>
-        <ul class="navbar-nav ms-auto">
-          <!-- Navbar Search -->
           <li class="nav-item">
-            <a href="{{ url_for('main_route.log_out') }}" class="nav-link active">ログアウト</a>
+            <a class="nav-link{% if user_list %} active {% endif %}" href="{{ url_for('main_route.user_list') }}">ユーザー管理</a>
           </li>
         </ul>
+        <a href="{{ url_for('main_route.log_out') }}" class="nav-link active">
+          <span class="navbar-text p-1">
+            @{{session['login_user']}}
+          </span>
+          <span class="navbar-text p-1">
+            logout
+          </span>
+        </a>
       </div>
     </div>
   </nav>

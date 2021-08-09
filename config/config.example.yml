@@ -29,7 +29,12 @@ log:
     level: DEBUG
     handlers: [fileRotatingHandler,consoleHandler]
 database:
-  host: "localhost"
-  dbname: "twitter_api"
-  user: "nagatokentarou"
-  password: "nagato8"
+  host: ""
+  dbname: ""
+  user: ""
+  password: ""
+twitter_key:
+  consumer_key: ""
+  consumer_secret: ""
+  access_token: ""
+  access_token_secret: ""

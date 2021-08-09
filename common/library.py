@@ -3,14 +3,17 @@ import key_dic
 from models.main_model import BaseModel
 import datetime
 import re
+from common.config import get_config
 
 """"
 Twitterのキー
 """
-consumer_key = key_dic.api_key_dic["consumer_key"]
-consumer_secret = key_dic.api_key_dic["consumer_secret"]
-access_token = key_dic.api_key_dic["access_token"]
-access_token_secret = key_dic.api_key_dic["access_token_secret"]
+cnfg = get_config()
+twitter_key = cnfg['twitter_key']
+consumer_key = twitter_key["consumer_key"]
+consumer_secret = twitter_key["consumer_secret"]
+access_token = twitter_key["access_token"]
+access_token_secret = twitter_key["access_token_secret"]
 
 """
 Twitterオブジェクトの生成
@@ -21,7 +24,7 @@ api = tweepy.API(auth)
 
 api = tweepy.API(auth)
 
-#DB用のインスタンス生成
+# DB用のインスタンス生成
 BaseModel = BaseModel()
 
 
@@ -35,7 +38,8 @@ def set_gmt_jp(time):
   """
   return time + datetime.timedelta(hours=9)
 
-def tweet_gets(target , count):
+
+def tweet_gets(target, count):
   """ツイート文字検索
     Args:
       target(string):検索したい文字列
@@ -56,7 +60,7 @@ def search_condition(search_no_seq, target, status):
     Args:
       search_no_seq(int): 検索条件のシーケンス
       target(string):フォームから取得した検索条件
-      status(string): 
+      status(string):
         0: 文字列検索
         1: ユーザー検索
     Returns:
@@ -87,7 +91,8 @@ def search_condition(search_no_seq, target, status):
     ]
     tx.save(sql, insert_sarch_index)
 
-def save_user(get_user_no_seq, user):
+
+def save_user(get_user_no_seq, user, now):
   """ユーザー保存
     Args:
       get_user_no_seq(int): ユーザーのシーケンス
@@ -108,10 +113,11 @@ def save_user(get_user_no_seq, user):
           follower,
           profile,
           tweet_count,
-          status
+          status,
+          get_time
         )
         VALUES(
-          %s,%s,%s,%s,%s,%s,%s,%s
+          %s,%s,%s,%s,%s,%s,%s,%s,%s
         )
       """
     insert_get_user_index = [
@@ -123,8 +129,10 @@ def save_user(get_user_no_seq, user):
       user.description,
       user.statuses_count,
       "0",
+      now
     ]
     tx.save(sql, insert_get_user_index)
+
 
 def save_tweet(tweet_id_seq, search_no_seq, user, tweet):
   """ツイート保存
@@ -170,6 +178,7 @@ def save_tweet(tweet_id_seq, search_no_seq, user, tweet):
     ]
     tx.save(sql, insert_get_tweet_index)
 
+
 def save_hashtag(tag_id_seq, hashtag, tweet_id_seq):
   """ハッシュタグ保存
     Args:
@@ -196,6 +205,7 @@ def save_hashtag(tag_id_seq, hashtag, tweet_id_seq):
     tag_list = [tag_id_seq, hashtag, tweet_id_seq]
     tx.save(sql, tag_list)
 
+
 def date_format(hiduke):
   """日付のフォーマット（%Y/%m/%d %H:%M or %Y/%m/%d）
     Args:
@@ -219,6 +229,7 @@ def date_format(hiduke):
   except Exception:
     raise Exception("日付の形式が正しくありません")
 
+
 def get_user(target, count):
   """ユーザー別ツイート検索
     Args:
@@ -233,6 +244,7 @@ def get_user(target, count):
   """
   tweets = api.user_timeline(target, count=count)
   return tweets
+
 
 def search_infos(status=''):
   """ユーザー別ツイート検索
@@ -260,7 +272,7 @@ def search_infos(status=''):
         search_info si
       LEFT JOIN
         (SELECT COUNT(*) as tw_count , search_no FROM tweet GROUP BY search_no ) tw
-      ON 
+      ON
         si.search_no = tw.search_no
         {status}
       ORDER BY
@@ -270,8 +282,9 @@ def search_infos(status=''):
 
     for info in search_infos:
       info['get_at'] = date_format(info['get_at'])
-    
+
   return search_infos
+
 
 def check_form(target, count, status):
   """フォームのバリデーション
@@ -284,46 +297,46 @@ def check_form(target, count, status):
     Returns:
       入力エラーの場合メッセージが返される
   """
-  if target =='' and count == '':
+  if target == '' and count == '':
     """どちらも未入力の場合
     """
-    parmams = {"message" : "検索文字、検索数を入力してください"}
-    return parmams
-  
-  if target =='':
-    """検索ワードがない場合
-    """
-    parmams = {"message" : "検索文字を入力してください"}
+    parmams = {"message": "検索文字、検索数を入力してください"}
     return parmams
 
-  if count =='':
+  if target == '':
+    """検索ワードがない場合
+    """
+    parmams = {"message": "検索文字を入力してください"}
+    return parmams
+
+  if count == '':
     """取得数がない場合
     """
-    parmams = {"message" : "検索数を入力してください"}
+    parmams = {"message": "検索数を入力してください"}
     return parmams
-  
+
   if not count.isdigit():
     """取得数が数字以外の場合
     """
-    parmams = {"message" : "検索数は数字を入力してください"}
+    parmams = {"message": "検索数は数字を入力してください"}
     return parmams
-  
+
   if target[0] == '@':
     """検索ワードがID
     """
     if status == '0':
       """ワード検索の場合
       """
-      parmams = {"message" : "ユーザー検索はできません。＠を外してください"}
+      parmams = {"message": "ユーザー検索はできません。＠を外してください"}
       return parmams
 
-  if target[0] is not '@':
+  if target[0] != '@':
     """検索ワードがワード検索
     """
     if status == '1':
       """ユーザー検索の場合
       """
-      parmams = {"message" : "文字列の先頭に@をつけてください"}
+      parmams = {"message": "文字列の先頭に@をつけてください"}
       return parmams
 
   if status == '1':
@@ -332,8 +345,9 @@ def check_form(target, count, status):
     if not re.compile(r'^[a-zA-Z0-9_]+$').match(target[1:]):
       """TwitterのID登録できる文字以外の場合
       """
-      parmams = {"message" : "ユーザー名は半角英数字と_のみ使用できます。"}
+      parmams = {"message": "ユーザー名は半角英数字と_のみ使用できます。"}
       return parmams
+
 
 def tweet_list(where=''):
   """取得ツイート詳細画面
@@ -342,7 +356,6 @@ def tweet_list(where=''):
     Returns:
       True:
         取得詳細の情報がjsonで返ってくる
-      
   """
   with BaseModel.start_transaction() as tx:
       sql = f"""
@@ -358,7 +371,7 @@ def tweet_list(where=''):
           tweet tw
         LEFT JOIN
           (SELECT DISTINCT user_id, user_name FROM twitter_user ) tu
-          ON 
+          ON
             tw.user_id=tu.user_id
         {where}
         ORDER BY
@@ -366,3 +379,7 @@ def tweet_list(where=''):
         """
       get_tweets = tx.find_all(sql)
   return get_tweets
+
+
+def get_user_info(user_id):
+  return api.get_user(user_id)
