@@ -110,3 +110,5 @@ logs/
 
 # config
 config.yml
+
+key_dic.py
